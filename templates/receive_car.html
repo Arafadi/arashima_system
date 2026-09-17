@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receive Car - {{ comp.name }}</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="{{ url_for('admin_dashboard') }}">
+                <i class="fa-solid fa-gauge-high text-warning me-2"></i> {{ comp.name }} <span class="badge bg-primary ms-2 fs-6">Receive Car Panel</span>
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm px-3"><i class="fa-solid fa-arrow-left me-1"></i> Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card p-4 bg-white shadow-sm">
+                    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                        <div class="fs-2 text-primary me-3"><i class="fa-solid fa-car-side"></i></div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">Receive New Car</h4>
+                            <p class="text-muted small mb-0">Enter car specifications, client details, financial info, and separate before/after work photos.</p>
+                        </div>
+                    </div>
+
+                    <form action="{{ url_for('receive_car') }}" method="POST" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <!-- Car Name -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Car Name / Model <span class="text-danger">*</span></label>
+                                <input type="text" name="car_name" class="form-control" placeholder="e.g. Toyota Alphard / Crown" required>
+                            </div>
+                            <!-- Chassis Number -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Chassis Number <span class="text-danger">*</span></label>
+                                <input type="text" name="chassis" class="form-control" placeholder="e.g. AGH30-1234567" required>
+                            </div>
+
+                            <!-- Color Name -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Color Name</label>
+                                <input type="text" name="color_name" class="form-control" placeholder="e.g. Pearl White / Black">
+                            </div>
+                            <!-- Color Code -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Color Code</label>
+                                <input type="text" name="color_code" class="form-control" placeholder="e.g. 070 / 202">
+                            </div>
+
+                            <!-- Client Company -->
+                            <div class="col-md-12">
+                                <label class="form-label small fw-semibold text-muted">Client Company Name <span class="text-danger">*</span></label>
+                                <select name="client_company" class="form-select" required>
+                                    <option value="">-- Select Client Company Name --</option>
+                                    {% for cust in customers %}
+                                    <option value="{{ cust.company_name }}">{{ cust.company_name }} (Owner: {{ cust.owner_name }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Contract Amount -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Contract Amount (¥) <span class="text-danger">*</span></label>
+                                <input type="number" step="any" name="contract" class="form-control fw-bold text-primary" placeholder="0" required>
+                            </div>
+                            <div class="mb-3">
+    <label class="form-label">Car Receiving Date (গাড়ি রিসিভের তারিখ)</label>
+    <input type="date" class="form-control" name="receiving_date" value="{{ today_date }}" required>
+</div>
+				
+				
+
+                            <!-- Assigned Staff -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Assign Staff</label>
+                                <select name="assigned_staff" class="form-select">
+                                    <option value="">-- Select Staff --</option>
+                                    {% for st in staff_list %}
+                                    <option value="{{ st.name }}">{{ st.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Initial Status</label>
+                                <select name="status" class="form-select fw-semibold">
+                                    <option value="In Progress">🟡 In Progress</option>
+                                    <option value="Waiting">🟠 Waiting</option>
+                                    <option value="Completed">🟢 Completed</option>
+                                    <option value="Delivered">✅ Delivered</option>
+                                </select>
+                            </div>
+
+                            <!-- Work Details / Notes -->
+                            <div class="col-md-12">
+                                <label class="form-label small fw-semibold text-muted">Work Details / Instructions <span class="text-danger">*</span></label>
+                                <textarea name="details" class="form-control" rows="4" placeholder="Enter necessary work descriptions, parts needed, or special instructions..." required></textarea>
+                            </div>
+
+                            <!-- Before Work Photos -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted"><i class="fa-solid fa-camera text-warning me-1"></i> Before Work Photos (Optional)</label>
+                                <input type="file" name="before_images" class="form-control" multiple accept="image/*">
+                                
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top text-end">
+                            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary px-4 py-2 me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5 py-2 shadow-sm"><i class="fa-solid fa-car me-1"></i> Save & Register Car</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

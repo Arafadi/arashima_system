@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Staff - {{ comp.name }}</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="{{ url_for('admin_dashboard') }}">
+                <i class="fa-solid fa-gauge-high text-warning me-2"></i> {{ comp.name }} <span class="badge bg-success ms-2 fs-6">Staff Registration</span>
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('view_staff') }}" class="btn btn-outline-light btn-sm px-3"><i class="fa-solid fa-arrow-left me-1"></i> Staff List</a>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm px-3"><i class="fa-solid fa-house me-1"></i> Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card p-4 bg-white shadow-sm">
+                    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                        <div class="fs-2 text-success me-3"><i class="fa-solid fa-user-gear"></i></div>
+                        <div>
+                            <h4 class="fw-bold text-dark mb-0">Register New Staff Member</h4>
+                            <p class="text-muted small mb-0">Create staff profile, login credentials, and assign base salary.</p>
+                        </div>
+                    </div>
+
+                    <form action="{{ url_for('add_staff') }}" method="POST">
+                        <div class="row g-3">
+                            <!-- Staff Name -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Staff Full Name <span class="text-danger">*</span></label>
+                                <input type="text" name="name" class="form-control" placeholder="e.g. John Doe" required>
+                            </div>
+                            <!-- Mobile Number -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Mobile Number <span class="text-danger">*</span></label>
+                                <input type="text" name="mobile" class="form-control" placeholder="e.g. 090-1234-5678" required>
+                            </div>
+
+                            <!-- Base Salary -->
+                            <div class="col-md-12">
+                                <label class="form-label small fw-semibold text-muted">Base Salary (¥) <span class="text-danger">*</span></label>
+                                <input type="number" step="any" name="base_salary" class="form-control fw-bold text-success" placeholder="0" required>
+                            </div>
+
+                            <!-- Username -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Login Username <span class="text-danger">*</span></label>
+                                <input type="text" name="username" class="form-control" placeholder="e.g. staff_john" required>
+                            </div>
+                            <!-- Password -->
+                            <div class="col-md-6">
+                                <label class="form-label small fw-semibold text-muted">Login Password <span class="text-danger">*</span></label>
+                                <input type="password" name="password" class="form-control" placeholder="**" required>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-top text-end">
+                            <a href="{{ url_for('view_staff') }}" class="btn btn-outline-secondary px-4 py-2 me-2">Cancel</a>
+                            <button type="submit" class="btn btn-success px-5 py-2 shadow-sm"><i class="fa-solid fa-user-plus me-1"></i> Save Staff Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

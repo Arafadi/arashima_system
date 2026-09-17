@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white p-4 shadow-sm rounded">
+    <h3>Staff Salary & Advance Deduction (26 Working Days)</h3>
+    <table class="table table-bordered mt-3 align-middle">
+        <thead class="table-dark">
+            <tr><th>Staff Name</th><th>Base Salary</th><th>Leave / Half-Day Deduction</th><th>Advance Taken</th><th>Final Payable</th></tr>
+        </thead>
+        <tbody>
+            {% for s in staff %}
+            <tr>
+                <td><strong>{{ s.name }}</strong></td>
+                <td>¥{{ s.base_salary }}</td>
+                <td class="text-danger">-¥{{ s.deduction }} <br><small>({{ s.leave_days }} Leave, {{ s.half_days }} Half)</small></td>
+                <td class="text-warning">-¥{{ s.advance }}</td>
+                <td><strong class="text-success">¥{{ s.final_payable }}</strong></td>
+            </tr>
+            {% for s in staff %}
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

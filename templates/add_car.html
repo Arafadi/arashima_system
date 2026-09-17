@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 bg-white p-4 shadow-sm rounded">
+        <h3 class="mb-3">Car Receiving & Work Scope Entry</h3>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <div class="col-md-6"><label>Car Name / Model</label><input type="text" name="car_name" class="form-control" required></div>
+                <div class="col-md-6"><label>Chassis Number</label><input type="text" name="chassis" class="form-control" required></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6"><label>Color Name</label><input type="text" name="color_name" class="form-control" required></div>
+                <div class="col-md-6"><label>Color Code</label><input type="text" name="color_code" class="form-control" required></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4"><label>Company / Client Name</label><input type="text" name="client" class="form-control" required></div>
+                <div class="col-md-4"><label>Contract Amount (¥)</label><input type="number" name="contract" class="form-control" required></div>
+                <div class="col-md-4"><label>Initial Received (¥)</label><input type="number" name="received" class="form-control" value="0"></div>
+            </div>
+            <div class="mb-3">
+                <label>Work Details & Damaged Areas Description</label>
+                <textarea name="details" class="form-control" rows="3" required placeholder="Specify dent/paint locations..."></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Upload Damage Photos (Multiple allowed)</label>
+                <input type="file" name="car_images" class="form-control" multiple accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Save Car Entry</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

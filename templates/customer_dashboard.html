@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - {{ comp.name }}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+        .card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .stat-card { border-left: 4px solid #2a5298; transition: transform 0.2s; }
+        .stat-card-clickable { cursor: pointer; }
+        .stat-card-clickable:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .table img { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; margin-right: 2px; }
+        .clickable-badge { cursor: pointer; transition: transform 0.2s; }
+        .clickable-badge:hover { transform: scale(1.05); }
+
+        /* প্রিন্ট করার সময় শুধু মডাল বা প্রিনটেবল অংশ দেখানোর জন্য স্টাইল */
+        @media print {
+            body * { visibility: hidden; }
+            #printableMonthlyModal, #printableMonthlyModal * { visibility: visible; }
+            #printableMonthlyModal { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
+            .modal-footer, .btn-close { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-car-side me-2"></i>{{ comp.name }} - Customer Portal</a>
+            
+            <div class="d-flex align-items-center">
+                <!-- Monthly Filter Form inside Navbar -->
+                <form method="GET" action="{{ url_for('customer_dashboard') }}" class="d-flex align-items-center me-3 bg-white p-1 rounded shadow-sm">
+                    <label class="small text-muted fw-bold px-2 mb-0"><i class="fas fa-calendar-alt text-primary me-1"></i> Month:</label>
+                    <input type="month" name="month" value="{{ selected_month }}" class="form-control form-control-sm border-0 bg-light me-1" onchange="this.form.submit()">
+                </form>
+
+                <span class="text-white me-3 d-none d-md-inline"><i class="fas fa-user-circle me-1"></i> {{ session.name }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        
+        <!-- Welcome Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="p-4 bg-white rounded-3 shadow-sm border-start border-primary border-4">
+                    <h3 class="fw-bold text-dark mb-1">Welcome, {{ cust.company_name if cust else session.name }}!</h3>
+                    <p class="text-muted mb-0">Here is the live status of your vehicles, financial summaries, and delivery records.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Statistics Cards (All Time) -->
+        <h5 class="fw-bold text-secondary mb-3"><i class="fas fa-chart-pie me-2"></i>Overall Summary (All Time)</h5>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card p-3 bg-white">
+                    <div class="text-muted small fw-bold">TOTAL CONTRACT VALUE</div>
+                    <h3 class="fw-bold text-primary mb-0">¥{{ "{:,.0f}".format(total_contract) }}</h3>
+                </div>
+            </div>
+            <!-- Total Paid Card (Clickable to open Paid History Modal) -->
+            <div class="col-md-4">
+                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #28a745;" data-bs-toggle="modal" data-bs-target="#totalPaidModal" title="Click to view all payment records">
+                    <div class="text-muted small fw-bold">TOTAL PAID <i class="fas fa-external-link-alt float-end text-success"></i></div>
+                    <h3 class="fw-bold text-success mb-0">¥{{ "{:,.0f}".format(total_paid) }}</h3>
+                </div>
+            </div>
+            <!-- Total Due Card (Clickable to open Due Modal) -->
+            <div class="col-md-4">
+                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #dc3545;" data-bs-toggle="modal" data-bs-target="#totalDueModal" title="Click to view due cars">
+                    <div class="text-muted small fw-bold">TOTAL DUE <i class="fas fa-external-link-alt float-end text-danger"></i></div>
+                    <h3 class="fw-bold text-danger mb-0">¥{{ "{:,.0f}".format(total_due) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Report Statistics Cards -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-secondary mb-0"><i class="fas fa-calendar-check me-2"></i>Monthly Report for: <span class="text-primary">{{ selected_month }}</span></h5>
+            <span class="badge bg-info text-dark p-2 fs-6 clickable-badge shadow-sm" data-bs-toggle="modal" data-bs-target="#monthlyDeliveredModal">
+                <i class="fas fa-car me-1"></i> Delivered Cars this month: <strong>{{ monthly_cars|length }}</strong> <i class="fas fa-external-link-alt ms-1 small"></i>
+            </span>
+        </div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card p-3 bg-white" style="border-left-color: #17a2b8;">
+                    <div class="text-muted small fw-bold">MONTHLY DELIVERED VALUE</div>
+                    <h3 class="fw-bold text-info mb-0">¥{{ "{:,.0f}".format(monthly_contract) }}</h3>
+                </div>
+            </div>
+            <!-- Monthly Paid Card (Clickable) -->
+            <div class="col-md-4">
+                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #28a745;" data-bs-toggle="modal" data-bs-target="#monthlyPaidModal" title="Click to view monthly paid records">
+                    <div class="text-muted small fw-bold">MONTHLY PAID <i class="fas fa-external-link-alt float-end text-success"></i></div>
+                    <h3 class="fw-bold text-success mb-0">¥{{ "{:,.0f}".format(monthly_paid) }}</h3>
+                </div>
+            </div>
+            <!-- Monthly Due Card (Clickable) -->
+            <div class="col-md-4">
+                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #ffc107;" data-bs-toggle="modal" data-bs-target="#monthlyDueModal" title="Click to view monthly due cars">
+                    <div class="text-muted small fw-bold">MONTHLY DUE <i class="fas fa-external-link-alt float-end text-warning"></i></div>
+                    <h3 class="fw-bold text-warning mb-0">¥{{ "{:,.0f}".format(monthly_due) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cars Table Section (All Cars) -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-secondary"><i class="fas fa-list me-2"></i>All Vehicles & Progress Tracking</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Car Name / Chassis</th>
+                                <th>Dates (Receive & Delivery)</th>
+                                <th>Financials</th>
+                                <th>Status</th>
+                                <th>Photos (Before / After)</th>
+                                <th class="text-center">Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if cars %}
+                                {% for car in cars %}
+                                <tr>
+                                    <td class="fw-bold">{{ loop.index }}</td>
+                                    <td>
+                                        <div class="fw-bold text-dark">{{ car.car_name }}</div>
+                                        <small class="text-muted font-monospace">Chassis: {{ car.chassis }}</small><br>
+                                        <small class="badge bg-light text-dark border">Color: {{ car.color_name }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="small">
+                                            <span class="text-muted"><i class="fas fa-calendar-alt text-primary me-1"></i> Received:</span> 
+                                            <span class="fw-semibold">{{ car.get('receiving_date', 'N/A') }}</span>
+                                        </div>
+                                        <div class="small mt-1">
+                                            <span class="text-muted"><i class="fas fa-calendar-check text-success me-1"></i> Delivery:</span> 
+                                            {% if car.get('delivery_date') %}
+                                                <span class="fw-semibold text-success">{{ car.get('delivery_date') }}</span>
+                                            {% else %}
+                                                <span class="text-danger fst-italic">Pending Delivery</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="small">Contract: <span class="fw-bold">¥{{ "{:,.0f}".format(car.contract) }}</span></div>
+                                        <div class="small text-success">Paid: ¥{{ "{:,.0f}".format(car.received) }}</div>
+                                        <div class="small text-danger">Due: ¥{{ "{:,.0f}".format(car.contract - car.received) }}</div>
+                                    </td>
+                                    <td>
+                                        {% if car.status == 'Delivered' %}
+                                            <span class="badge bg-success">Delivered</span>
+                                        {% elif car.status == 'Completed' %}
+                                            <span class="badge bg-info text-dark">Completed</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark">In Progress</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div style="max-width: 150px; overflow-x: auto; white-space: nowrap;">
+                                            {% if car.before_images %}
+                                                {% for img in car.before_images %}
+                                                    <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename='uploads/' + img) }}" title="Before Image" class="border">
+                                                    </a>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% if car.after_images %}
+                                                {% for img in car.after_images %}
+                                                    <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                                        <img src="{{ url_for('static', filename='uploads/' + img) }}" title="After Image" class="border border-success">
+                                                    </a>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('customer_invoice', car_id=car.id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="fas fa-file-invoice me-1"></i> Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">No vehicles found assigned to your account.</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 1. Total Paid History Modal -->
+    <div class="modal fade" id="totalPaidModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-receipt me-2"></i> All-Time Payment History</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">List of all individual payments made across all vehicles with dates. (Admins can edit/remove incorrect entries if needed).</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Car Name / Chassis</th>
+                                    <th>Payment Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set has_payments = false %}
+                                {% for car in cars %}
+                                    {% if car.payment_history %}
+                                        {% for pay in car.payment_history %}
+                                            {% set has_payments = true %}
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ car.car_name }}</strong><br>
+                                                    <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
+                                                </td>
+                                                <td><span class="badge bg-secondary">{{ pay.date }}</span></td>
+                                                <td class="fw-bold text-success">¥{{ "{:,.0f}".format(pay.amount) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not has_payments %}
+                                    <tr><td colspan="3" class="text-center text-muted py-3">No payment records found.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Total Due Cars Modal -->
+    <div class="modal fade" id="totalDueModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-wallet me-2"></i> All Vehicles with Due Amounts</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Car Name / Chassis</th>
+                                    <th>Contract</th>
+                                    <th>Paid</th>
+                                    <th>Due Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set has_dues = false %}
+                                {% for car in cars %}
+                                    {% set due = car.contract - car.received %}
+                                    {% if due > 0 %}
+                                        {% set has_dues = true %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ car.car_name }}</strong><br>
+                                                <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
+                                            </td>
+                                            <td>¥{{ "{:,.0f}".format(car.contract) }}</td>
+                                            <td class="text-success">¥{{ "{:,.0f}".format(car.received) }}</td>
+                                            <td class="fw-bold text-danger">¥{{ "{:,.0f}".format(due) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not has_dues %}
+                                    <tr><td colspan="4" class="text-center text-muted py-3">Awesome! No due amounts for any vehicle.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Monthly Paid History Modal -->
+    <div class="modal fade" id="monthlyPaidModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-calendar-alt me-2"></i> Monthly Paid Records ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Payments made specifically during the selected month ({{ selected_month }}).</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Car Name / Chassis</th>
+                                    <th>Payment Date</th>
+                                    <th>Amount Paid</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set monthly_paid_found = false %}
+                                {% for car in cars %}
+                                    {% if car.payment_history %}
+                                        {% for pay in car.payment_history %}
+                                            {# এখানে ধরে নেওয়া হচ্ছে pay.date ফরম্যাট YYYY-MM বা মাসের নামের সাথে মিলে #}
+                                            {% if selected_month in pay.date %}
+                                                {% set monthly_paid_found = true %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ car.car_name }}</strong><br>
+                                                        <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
+                                                    </td>
+                                                    <td><span class="badge bg-secondary">{{ pay.date }}</span></td>
+                                                    <td class="fw-bold text-success">¥{{ "{:,.0f}".format(pay.amount) }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not monthly_paid_found %}
+                                    <tr><td colspan="3" class="text-center text-muted py-3">No payment records found for {{ selected_month }}.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Monthly Due Cars Modal -->
+    <div class="modal fade" id="monthlyDueModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i> Monthly Due / Pending Cars ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Cars delivered or registered in {{ selected_month }} that still have remaining due amounts.</p>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Car Name / Chassis</th>
+                                    <th>Contract</th>
+                                    <th>Received</th>
+                                    <th>Due Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set m_due_found = false %}
+                                {% for car in monthly_cars %}
+                                    {% set due = car.contract - car.received %}
+                                    {% if due > 0 %}
+                                        {% set m_due_found = true %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ car.car_name }}</strong><br>
+                                                <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
+                                            </td>
+                                            <td>¥{{ "{:,.0f}".format(car.contract) }}</td>
+                                            <td class="text-success">¥{{ "{:,.0f}".format(car.received) }}</td>
+                                            <td class="fw-bold text-danger">¥{{ "{:,.0f}".format(due) }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not m_due_found %}
+                                    <tr><td colspan="4" class="text-center text-muted py-3">Great! No due amounts for cars in {{ selected_month }}.</td></tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Delivered Cars Popup Modal -->
+    <div class="modal fade" id="monthlyDeliveredModal" tabindex="-1" aria-labelledby="monthlyDeliveredModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content" id="printableMonthlyModal">
+                <div class="modal-header bg-info text-dark">
+                    <h5 class="modal-title fw-bold" id="monthlyDeliveredModalLabel">
+                        <i class="fas fa-car-side me-2"></i> Monthly Delivery & Financial Report ({{ selected_month }})
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="fw-bold mb-0 text-secondary">Customer: {{ cust.company_name if cust else session.name }}</h6>
+                            <small class="text-muted">Report Month: {{ selected_month }}</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-primary">Total Delivered: {{ monthly_cars|length }}</span>
+                        </div>
+                    </div>
+
+                    {% if monthly_cars %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped align-middle mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Car Name & Chassis</th>
+                                        <th>Receive Date</th>
+                                        <th>Delivery Date</th>
+                                        <th>Contract Value</th>
+                                        <th>Paid Value</th>
+                                        <th>Due Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for car in monthly_cars %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>
+                                            <strong>{{ car.car_name }}</strong><br>
+                                            <small class="text-muted font-monospace">{{ car.chassis }}</small>
+                                        </td>
+                                        <td><span class="text-primary">{{ car.get('receiving_date', 'N/A') }}</span></td>
+                                        <td><span class="text-success fw-bold">{{ car.get('delivery_date', 'N/A') }}</span></td>
+                                        <td>¥{{ "{:,.0f}".format(car.contract) }}</td>
+                                        <td class="text-success">¥{{ "{:,.0f}".format(car.received) }}</td>
+                                        <td class="text-danger">¥{{ "{:,.0f}".format(car.contract - car.received) }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot class="table-light fw-bold">
+                                    <tr>
+                                        <td colspan="4" class="text-end">Total for {{ selected_month }}:</td>
+                                        <td>¥{{ "{:,.0f}".format(monthly_contract) }}</td>
+                                        <td class="text-success">¥{{ "{:,.0f}".format(monthly_paid) }}</td>
+                                        <td class="text-danger">¥{{ "{:,.0f}".format(monthly_contract - monthly_paid) }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="fas fa-info-circle fa-2x mb-2 text-warning"></i>
+                            <p class="mb-0">No cars were delivered in this month ({{ selected_month }}).</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    {% if monthly_cars %}
+                    <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
+                        <i class="fas fa-print me-1"></i> Print / Save Report
+                    </button>
+                    {% endif %}
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

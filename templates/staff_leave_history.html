@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal - {{ comp.name }}</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .stat-card {
+            border-left: 5px solid;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar with History Buttons -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fa-solid fa-user-tie text-warning me-2"></i> Staff Portal: <span class="text-info">{{ staff.name }}</span>
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <!-- Salary History Button -->
+                <a href="{{ url_for('staff_salary_history') }}" class="btn btn-outline-warning btn-sm fw-bold">
+                    <i class="fa-solid fa-file-invoice-dollar me-1"></i> Salary History
+                </a>
+                <!-- Leave History Button -->
+                <a href="{{ url_for('staff_leave_history') }}" class="btn btn-outline-info btn-sm fw-bold">
+                    <i class="fa-solid fa-calendar-days me-1"></i> Leave History
+                </a>
+                <!-- Car Work History Button -->
+                <a href="{{ url_for('staff_work_history') }}" class="btn btn-outline-success btn-sm fw-bold">
+                    <i class="fa-solid fa-car-side me-1"></i> Car Work History
+                </a>
+                <!-- Logout Button -->
+                <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid px-4 py-4">
+
+        <!-- Staff Statistics Summary Cards (Including Advance Due) -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card border-primary p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">In Progress Cars</p>
+                            <h3 class="text-primary fw-bold mb-0">{{ in_progress_count }} Cars</h3>
+                        </div>
+                        <div class="fs-1 text-primary opacity-25"><i class="fa-solid fa-car"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card border-success p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Completed This Month</p>
+                            <h3 class="text-success fw-bold mb-0">{{ completed_count }} Cars</h3>
+                        </div>
+                        <div class="fs-1 text-success opacity-25"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card border-danger p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Advance Due / Balance</p>
+                            <h3 class="text-danger fw-bold mb-0">¥{{ staff.get('advance_balance', 0.0) }}</h3>
+                        </div>
+                        <div class="fs-1 text-danger opacity-25"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card border-warning p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Estimated Net Salary</p>
+                            <h3 class="text-warning fw-bold mb-0">¥{{ net_salary }}</h3>
+                        </div>
+                        <div class="fs-1 text-warning opacity-25"><i class="fa-solid fa-yen-sign"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Currently Working On Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning py-3 border-0">
+                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-gears me-2"></i> Currently Working On (In Progress)</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if in_progress_cars %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3 ps-3">Car Model</th>
+                                <th class="py-3">Chassis</th>
+                                <th class="py-3">Client Company</th>
+                                <th class="py-3">Status</th>
+                                <th class="py-3">Work Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for car in in_progress_cars %}
+                            <tr>
+                                <td class="ps-3 fw-bold text-primary">{{ car.car_name }}</td>
+                                <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
+                                <td>{{ car.client_company }}</td>
+                                <td><span class="badge bg-warning text-dark">{{ car.status }}</span></td>
+                                <td>{{ car.details }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p class="mb-0">No cars currently assigned in progress.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Upcoming Work Schedule (Next in Queue) Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white py-3 border-0">
+                <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list-check me-2"></i> Upcoming Work Schedule (Next in Queue)</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if queue_cars %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3 ps-3">Car Model</th>
+                                <th class="py-3">Chassis</th>
+                                <th class="py-3">Client Company</th>
+                                <th class="py-3">Status</th>
+                                <th class="py-3">Work Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for car in queue_cars %}
+                            <tr>
+                                <td class="ps-3 fw-bold text-info">{{ car.car_name }}</td>
+                                <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
+                                <td>{{ car.client_company }}</td>
+                                <td><span class="badge bg-info text-dark">{{ car.status }}</span></td>
+                                <td>{{ car.details }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p class="mb-0">No upcoming cars scheduled in queue yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Completed Cars History Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white py-3 border-0">
+                <h5 class="mb-0 fw-bold"><i class="fa-solid fa-circle-check me-2"></i> Completed Cars History (This Month)</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if completed_cars %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3 ps-3">Car Model</th>
+                                <th class="py-3">Chassis</th>
+                                <th class="py-3">Client Company</th>
+                                <th class="py-3">Status</th>
+                                <th class="py-3">Work Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for car in completed_cars %}
+                            <tr>
+                                <td class="ps-3 fw-bold text-success">{{ car.car_name }}</td>
+                                <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
+                                <td>{{ car.client_company }}</td>
+                                <td><span class="badge bg-success">{{ car.status }}</span></td>
+                                <td>{{ car.details }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p class="mb-0">No completed cars recorded for this month yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management - {{ comp.name }}</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="{{ url_for('admin_dashboard') }}">
+                <i class="fa-solid fa-gauge-high text-warning me-2"></i> {{ comp.name }} <span class="badge bg-primary ms-2 fs-6">Customer List</span>
+            </a>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm px-3"><i class="fa-solid fa-arrow-left me-1"></i> Dashboard</a>
+                <a href="{{ url_for('add_customer') }}" class="btn btn-success btn-sm px-3"><i class="fa-solid fa-user-plus me-1"></i> Add Customer</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid px-4 py-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-users text-primary me-2"></i> All Customer Profiles & Their Vehicles</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if customer_profiles %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="py-3 ps-3">Company & Owner</th>
+                                <th class="py-3">Contact Info</th>
+                                <th class="py-3 text-center">Total Cars</th>
+                                <th class="py-3">Financial Status</th>
+                                <th class="py-3 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cp in customer_profiles %}
+                            <tr>
+                                <td class="ps-3">
+                                    <div class="fw-bold text-primary">{{ cp.info.company_name }}</div>
+                                    <small class="text-muted"><i class="fa-solid fa-user me-1"></i>Owner: {{ cp.info.owner_name }}</small><br>
+                                    <small class="text-secondary">Username: <code>{{ cp.info.username }}</code></small>
+                                </td>
+                                <td>
+                                    <div><i class="fa-solid fa-phone text-success me-1"></i> {{ cp.info.mobile }}</div>
+                                    <small class="text-muted"><i class="fa-solid fa-location-dot me-1"></i> {{ cp.info.address }}</small>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-info text-dark px-2 py-1 fs-6">{{ cp.total_cars }} Cars</span>
+                                    <div class="small text-muted mt-1">Delivered: {{ cp.delivered_cars }}</div>
+                                </td>
+                                <td>
+                                    <div class="small fw-semibold text-danger">Due: ¥{{ cp.total_due }}</div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ url_for('edit_customer', cust_id=cp.info.id) }}" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                                        <form action="{{ url_for('delete_customer', cust_id=cp.info.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer?');" style="margin: 0;">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-trash-can"></i> Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-users-slash fs-1 text-muted opacity-50 mb-2"></i>
+                    <p class="text-muted mb-0">No customer profiles created yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
