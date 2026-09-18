@@ -1,10 +1,22 @@
 import os
-from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session
-from werkzeug.utils import secure_filename
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.secret_key = 'arashima_pro_secret_2026'
+app = Flask(_name_)
+
+# ক্লাউড ডাটাবেজ URL সেটআপ
+database_url = os.environ.get('DATABASE_URL')
+
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+# অনলাইনে PostgreSQL এবং লোকাল কম্পিউটারে SQLite ব্যবহার করার কনফিগারেশন
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///local.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'heic', 'webp'}
