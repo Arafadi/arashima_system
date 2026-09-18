@@ -89,7 +89,7 @@ def login():
             
         error = "Invalid Username or Password!"
         
-    return render_template('login.html', error=error)
+    return render_template('login.html', error=error, comp=database.get("company_info",{}))
 @app.route('/logout')
 def logout():
     session.clear()
