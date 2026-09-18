@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
 # ক্লাউড ডাটাবেজ URL সেটআপ
 database_url = os.environ.get('DATABASE_URL')
 
@@ -61,21 +62,24 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        admin_user = next((u for u in database["users"] if u['username'] == username and u['password'] == password), None)
+        # ১. এডমিন চেক (ইউজারনেম এবং পাসওয়ার্ড উভয়ই)
+        admin_user = next((u for u in database.get("users", []) if u.get('username') == username and u.get('password') == password), None)
         if admin_user:
             session['username'] = admin_user['username']
             session['role'] = 'admin'
             session['name'] = admin_user['name']
             return redirect(url_for('admin_dashboard'))
-        
-        cust_user = next((c for c in database["customers"] if c['username'] == username and c['password'] == password), None)
+            
+        # ২. কাস্টমার চেক
+        cust_user = next((c for c in database.get("customers", []) if c.get('username') == username and c.get('password') == password), None)
         if cust_user:
             session['username'] = cust_user['username']
             session['role'] = 'customer'
-            session['name'] = cust_user['company_name']
+            session['name'] = cust_user.get('company_name', 'Customer')
             return redirect(url_for('customer_dashboard'))
             
-        staff_user = next((s for s in database["staff"] if s['username'] == username and s['password'] == password), None)
+        # ৩. স্টাফ চেক
+        staff_user = next((s for s in database.get("staff", []) if s.get('username') == username and s.get('password') == password), None)
         if staff_user:
             session['username'] = staff_user['username']
             session['role'] = 'staff'
@@ -83,8 +87,8 @@ def login():
             return redirect(url_for('staff_dashboard'))
             
         error = "Invalid Username or Password!"
-    return render_template('login.html', error=error, comp=database["company"])
-
+        
+    return render_template('login.html', error=error)
 @app.route('/logout')
 def logout():
     session.clear()
