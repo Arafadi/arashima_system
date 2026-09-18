@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # ক্লাউড ডাটাবেজ URL সেটআপ
 database_url = os.environ.get('DATABASE_URL')
@@ -36,7 +36,7 @@ database = {
         "fax": "+81 47-636-4842"
     },
     "users": [
-        {"username": "admin", "password": "123", "role": "admin", "name": "Admin Boss"}
+        {"username": "admin", "password": "6869", "role": "admin", "name": "Admin Boss"}
     ],
     "customers": [],
     "staff": [],
