@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.secret_key = 'arashima_super_secret_key_12345'
 
 # ক্লাউড ডাটাবেজ URL সেটআপ
 database_url = os.environ.get('DATABASE_URL')
