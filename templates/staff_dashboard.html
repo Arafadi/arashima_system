@@ -8,44 +8,109 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for Gorgeous & Premium Crystal Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            --success-gradient: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+            --warning-gradient: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+            --danger-gradient: linear-gradient(135deg, #e74a3b 0%, #be2617 100%);
+            --info-gradient: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+            --dark-gradient: linear-gradient(135deg, #5a5c69 0%, #373840 100%);
+        }
         body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fc;
+            font-family: 'Inter', sans-serif;
+            color: #5a5c69;
         }
         .navbar {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #1a1c23 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         .card {
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            transition: all 0.3s ease;
         }
         .stat-card {
-            border-left: 5px solid;
+            border-left: 6px solid;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15);
+        }
+        .stat-card .icon-box {
+            font-size: 2.2rem;
+            opacity: 0.2;
+            transition: opacity 0.3s;
+        }
+        .stat-card:hover .icon-box {
+            opacity: 0.4;
+        }
+        .car-img-thumb {
+            width: 75px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e3e6f0;
             cursor: pointer;
             transition: transform 0.2s;
         }
-        .stat-card:hover {
-            transform: translateY(-3px);
+        .car-img-thumb:hover {
+            transform: scale(1.08);
+        }
+        .filter-container {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e3e6f0;
+        }
+        
+        /* Gorgeous & Crystal Premium Font for Company Name inside Salary Slip */
+        .gorgeous-company-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #1a1c23;
+            text-transform: uppercase;
         }
 
-        /* Print styles for modals and reports */
+        /* প্রিন্ট স্টাইল: নিখুঁত A4 সাইজ এবং শুধুমাত্র স্যালারি স্লিপ প্রিন্ট করার জন্য */
         @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
             body * {
                 visibility: hidden;
             }
-            .modal.show .modal-dialog, .modal.show .modal-dialog * {
+            #salaryModal, #salaryModal * {
                 visibility: visible;
             }
-            .modal.show .modal-dialog {
+            #salaryModal {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
                 margin: 0;
+                padding: 0;
+                background: white !important;
+                box-shadow: none !important;
             }
-            .modal-footer, .btn-close {
+            .modal-dialog {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .modal-content {
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .modal-footer, .modal-header .btn-close, .modal-header {
                 display: none !important;
             }
         }
@@ -53,27 +118,15 @@
 </head>
 <body>
 
-    <!-- Top Navbar with History Buttons -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark py-3">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fa-solid fa-user-tie text-warning me-2"></i> Staff Portal: <span class="text-info">{{ staff.name }}</span>
+            <a class="navbar-brand fw-bold fs-5" href="#">
+                <i class="fa-solid fa-user-gear text-warning me-2"></i> Staff Portal: <span class="text-info">{{ staff.name }}</span>
             </a>
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-                <!-- Salary History Button -->
-                <a href="{{ url_for('staff_salary_history') }}" class="btn btn-outline-warning btn-sm fw-bold">
-                    <i class="fa-solid fa-file-invoice-dollar me-1"></i> Salary History
-                </a>
-                <!-- Leave History Button -->
-                <a href="{{ url_for('staff_leave_history') }}" class="btn btn-outline-info btn-sm fw-bold">
-                    <i class="fa-solid fa-calendar-days me-1"></i> Leave History
-                </a>
-                <!-- Car Work History Button -->
-                <a href="{{ url_for('staff_work_history') }}" class="btn btn-outline-success btn-sm fw-bold">
-                    <i class="fa-solid fa-car-side me-1"></i> Car Work History
-                </a>
-                <!-- Logout Button -->
-                <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-secondary px-3 py-2"><i class="fa-solid fa-shield-halved me-1"></i> Staff Role</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm fw-bold px-3">
                     <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
                 </a>
             </div>
@@ -83,326 +136,652 @@
     <!-- Main Container -->
     <div class="container-fluid px-4 py-4">
 
-        <!-- Staff Statistics Summary Cards -->
+        <!-- Monthly Filter Bar & Total Car History Button -->
+        <div class="filter-container p-3 mb-4 shadow-sm">
+            <form method="GET" action="{{ url_for('staff_dashboard') }}" class="row align-items-center justify-content-between g-3">
+                <div class="col-md-7 d-flex align-items-center gap-3 flex-wrap">
+                    <label class="fw-bold text-dark mb-0 text-nowrap"><i class="fa-solid fa-calendar-days text-primary me-1"></i> Select Month:</label>
+                    <input type="month" name="month" class="form-control form-control-sm w-auto fw-bold text-dark border-secondary" value="{{ selected_month }}" onchange="this.form.submit()">
+                    <span class="badge bg-primary fs-7 text-nowrap px-3 py-2 shadow-sm">
+                        <i class="fa-solid fa-circle-check me-1"></i> Active: {{ selected_month }}
+                    </span>
+                    <!-- Total Car History Button -->
+                    <button type="button" class="btn btn-dark btn-sm fw-bold shadow-sm px-3 py-2" data-bs-toggle="modal" data-bs-target="#totalCarHistoryModal">
+                        <i class="fa-solid fa-folder-open me-1"></i> Total Car History
+                    </button>
+                </div>
+                <div class="col-md-5 text-md-end">
+                    <span class="text-muted small"><i class="fa-solid fa-circle-info text-info me-1"></i> Summary cards below are filtered for <strong>{{ selected_month }}</strong>.</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Staff Clickable Summary Cards Grid (Monthly Wise) -->
         <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card stat-card border-primary p-3 bg-white">
+            <!-- 1. In Progress Cars -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-primary p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#inProgressModal" role="button">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-muted mb-1 small fw-bold text-uppercase">In Progress Cars</p>
-                            <h3 class="text-primary fw-bold mb-0">{{ in_progress_count }} Cars</h3>
+                            <h3 class="text-primary fw-bold mb-0">{{ in_progress_cars|length }} <small class="fs-6 text-muted fw-normal">Units</small></h3>
+                            <small class="text-primary fs-7 fw-semibold">For {{ selected_month }}</small>
                         </div>
-                        <div class="fs-1 text-primary opacity-25"><i class="fa-solid fa-car"></i></div>
+                        <div class="icon-box text-primary"><i class="fa-solid fa-car-burst"></i></div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stat-card border-success p-3 bg-white" data-bs-toggle="modal" data-bs-target="#monthlyWorkModal" title="Click to view monthly work history comparison">
+
+            <!-- 2. Waiting / Queue -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-warning p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#waitingModal" role="button">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small fw-bold text-uppercase">Completed This Month <i class="fa-solid fa-circle-info text-success ms-1"></i></p>
-                            <h3 class="text-success fw-bold mb-0">{{ completed_count }} Cars</h3>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Waiting / Queue</p>
+                            <h3 class="text-warning fw-bold mb-0">{{ queue_cars|length }} <small class="fs-6 text-muted fw-normal">Units</small></h3>
+                            <small class="text-warning fs-7 fw-semibold">For {{ selected_month }}</small>
                         </div>
-                        <div class="fs-1 text-success opacity-25"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="icon-box text-warning"><i class="fa-solid fa-clock"></i></div>
                     </div>
                 </div>
             </div>
-            <!-- Leave Card (Clickable to open Leave History Popup) -->
-            <div class="col-md-3">
-                <div class="card stat-card border-danger p-3 bg-white" data-bs-toggle="modal" data-bs-target="#leaveModal" title="Click to view leave dates">
+
+            <!-- 3. Completed Cars -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-success p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#completedModal" role="button">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small fw-bold text-uppercase">Total Leave Days <i class="fa-solid fa-circle-info text-danger ms-1"></i></p>
-                            <h3 class="text-danger fw-bold mb-0">{{ staff.get('leave_days', 0) }} Days</h3>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Completed Cars</p>
+                            <h3 class="text-success fw-bold mb-0">{{ completed_cars|length }} <small class="fs-6 text-muted fw-normal">Units</small></h3>
+                            <small class="text-success fs-7 fw-semibold">For {{ selected_month }}</small>
                         </div>
-                        <div class="fs-1 text-danger opacity-25"><i class="fa-solid fa-calendar-xmark"></i></div>
+                        <div class="icon-box text-success"><i class="fa-solid fa-circle-check"></i></div>
                     </div>
                 </div>
             </div>
-            <!-- Net Salary Card (Clickable to open Salary Breakdown Popup) -->
-            <div class="col-md-3">
-                <div class="card stat-card border-warning p-3 bg-white" data-bs-toggle="modal" data-bs-target="#salaryModal" title="Click for salary breakdown">
+
+            <!-- 4. Delivered Cars -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-info p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#deliveredModal" role="button">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1 small fw-bold text-uppercase">Estimated Net Salary <i class="fa-solid fa-circle-info text-warning ms-1"></i></p>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Delivered Cars</p>
+                            <h3 class="text-info fw-bold mb-0">{{ delivered_cars|length }} <small class="fs-6 text-muted fw-normal">Units</small></h3>
+                            <small class="text-info fs-7 fw-semibold">For {{ selected_month }}</small>
+                        </div>
+                        <div class="icon-box text-info"><i class="fa-solid fa-truck-fast"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Advance Ledger -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-danger p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#advanceModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Advance Ledger</p>
+                            <h3 class="text-danger fw-bold mb-0">¥{{ staff.get('monthly_advance_total', 0.0) }}</h3>
+                            <small class="text-danger fs-7 fw-semibold">For {{ selected_month }}</small>
+                        </div>
+                        <div class="icon-box text-danger"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Leave Record -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-secondary p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#leaveModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Leave Record</p>
+                            <h3 class="text-secondary fw-bold mb-0">{{ staff_leaves|length }} <small class="fs-6 text-muted fw-normal">Days</small></h3>
+                            <small class="text-secondary fs-7 fw-semibold">For {{ selected_month }}</small>
+                        </div>
+                        <div class="icon-box text-secondary"><i class="fa-solid fa-calendar-days"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Overtime & Holiday Work -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-primary p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#overtimeModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Overtime & Holiday</p>
+                            <h3 class="text-primary fw-bold mb-0">{{ staff.get('monthly_overtime_minutes', 0) }} <small class="fs-6 text-muted fw-normal">Mins</small></h3>
+                            <small class="text-primary fs-7 fw-semibold">Holidays: {{ staff.get('monthly_holidays', [])|length }} Days</small>
+                        </div>
+                        <div class="icon-box text-primary"><i class="fa-solid fa-business-time"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Estimated Net Salary -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-warning p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#salaryModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Estimated Net Salary</p>
                             <h3 class="text-warning fw-bold mb-0">¥{{ net_salary }}</h3>
+                            <small class="text-warning fs-7 fw-semibold">Click for Salary Slip</small>
                         </div>
-                        <div class="fs-1 text-warning opacity-25"><i class="fa-solid fa-yen-sign"></i></div>
+                        <div class="icon-box text-warning"><i class="fa-solid fa-file-invoice-dollar"></i></div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Advance Due & Quick Summary Row -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-12">
-                <div class="card p-3 bg-white border-start border-danger border-4">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <!-- 9. Work History (This Month) -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card stat-card border-dark p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#monthHistoryModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5 class="fw-bold mb-1 text-dark"><i class="fa-solid fa-hand-holding-dollar text-danger me-2"></i> Advance Due / Balance</h5>
-                            <p class="text-muted mb-0 small">Current advance taken amount which will be adjusted from salary.</p>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Work History</p>
+                            <h3 class="text-dark fw-bold mb-0">{{ month_work_history|length }} <small class="fs-6 text-muted fw-normal">Cars</small></h3>
+                            <small class="text-dark fs-7 fw-semibold">For {{ selected_month }}</small>
                         </div>
-                        <h3 class="text-danger fw-bold mb-0">¥{{ staff.get('advance_balance', 0.0) }}</h3>
+                        <div class="icon-box text-dark"><i class="fa-solid fa-history"></i></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Currently Working On Section -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-warning py-3 border-0">
-                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-gears me-2"></i> Currently Working On (In Progress)</h5>
-            </div>
-            <div class="card-body p-0">
-                {% if in_progress_cars %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="py-3 ps-3">Car Model</th>
-                                <th class="py-3">Chassis</th>
-                                <th class="py-3">Client Company</th>
-                                <th class="py-3">Status</th>
-                                <th class="py-3">Work Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for car in in_progress_cars %}
-                            <tr>
-                                <td class="ps-3 fw-bold text-primary">{{ car.car_name }}</td>
-                                <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
-                                <td>{{ car.client_company }}</td>
-                                <td><span class="badge bg-warning text-dark">{{ car.status }}</span></td>
-                                <td>{{ car.details }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-4 text-muted">
-                    <p class="mb-0">No cars currently assigned in progress.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Upcoming Work Schedule Section -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-info text-white py-3 border-0">
-                <h5 class="mb-0 fw-bold"><i class="fa-solid fa-list-check me-2"></i> Upcoming Work Schedule (Next in Queue)</h5>
-            </div>
-            <div class="card-body p-0">
-                {% if queue_cars %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="py-3 ps-3">Car Model</th>
-                                <th class="py-3">Chassis</th>
-                                <th class="py-3">Client Company</th>
-                                <th class="py-3">Status</th>
-                                <th class="py-3">Work Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for car in queue_cars %}
-                            <tr>
-                                <td class="ps-3 fw-bold text-info">{{ car.car_name }}</td>
-                                <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
-                                <td>{{ car.client_company }}</td>
-                                <td><span class="badge bg-info text-dark">{{ car.status }}</span></td>
-                                <td>{{ car.details }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-4 text-muted">
-                    <p class="mb-0">No upcoming cars scheduled in queue yet.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Completed Cars History Section -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-success text-white py-3 border-0">
-                <h5 class="mb-0 fw-bold"><i class="fa-solid fa-circle-check me-2"></i> Completed Cars History (This Month)</h5>
-            </div>
-            <div class="card-body p-0">
-                {% if completed_cars %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="py-3 ps-3">Car Model</th>
-                                <th class="py-3">Chassis</th>
-                                <th class="py-3">Client Company</th>
-                                <th class="py-3">Status</th>
-                                <th class="py-3">Work Details</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for car in completed_cars %}
-                            <tr>
-                                <td class="ps-3 fw-bold text-success">{{ car.car_name }}</td>
-                                <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
-                                <td>{{ car.client_company }}</td>
-                                <td><span class="badge bg-success">{{ car.status }}</span></td>
-                                <td>{{ car.details }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="text-center py-4 text-muted">
-                    <p class="mb-0">No completed cars recorded for this month yet.</p>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
     </div>
 
-    <!-- 1. Salary Breakdown Popup Modal (Printable) -->
-    <div class="modal fade" id="salaryModal" tabindex="-1" aria-labelledby="salaryModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title fw-bold" id="salaryModalLabel"><i class="fa-solid fa-calculator me-2"></i> Salary Breakdown Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-3">
-                        <h6 class="fw-bold mb-0 text-dark">{{ staff.name }}</h6>
-                        <small class="text-muted">Estimated Salary & Advance Adjustment</small>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Base Salary</span>
-                            <strong class="text-dark">¥{{ staff.get('base_salary', 0) }}</strong>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Per Day Rate (Base / 26)</span>
-                            <strong class="text-secondary">¥{{ per_day_salary }}</strong>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Leave Deduction ({{ staff.get('leave_days', 0) }} Days)</span>
-                            <strong class="text-danger">- ¥{{ staff.get('leave_days', 0) * per_day_salary }}</strong>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Holiday Work Bonus ({{ staff.get('holiday_work_days', 0) }} Days)</span>
-                            <strong class="text-success">+ ¥{{ holiday_bonus }}</strong>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <span>Advance Balance Adjustment</span>
-                            <strong class="text-danger">- ¥{{ staff.get('advance_balance', 0.0) }}</strong>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
-                            <span class="fw-bold text-primary">Final Net Salary</span>
-                            <strong class="text-primary fs-5">¥{{ net_salary }}</strong>
-                        </li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-sm" onclick="window.print()"><i class="fa-solid fa-print me-1"></i> Print Salary Sheet</button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- ================= MODALS ================= -->
 
-    <!-- 2. Leave History / Absence Dates Popup Modal -->
-    <div class="modal fade" id="leaveModal" tabindex="-1" aria-labelledby="leaveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- 1. In Progress Cars Modal -->
+    <div class="modal fade" id="inProgressModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title fw-bold" id="leaveModalLabel"><i class="fa-solid fa-calendar-xmark me-2"></i> Absence / Leave Dates Record</h5>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-car-burst me-2"></i> In Progress Cars ({{ selected_month }})</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    {% if staff.get('leave_history') %}
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mb-0 align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Reason / Note</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for leave in staff.get('leave_history') %}
-                                <tr>
-                                    <td><span class="fw-bold text-danger">{{ leave.date }}</span></td>
-                                    <td>{{ leave.reason }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-4 text-muted">
-                        <i class="fa-solid fa-face-smile fs-1 mb-2 text-success"></i>
-                        <p class="mb-0">No leave or absence recorded for this month yet.</p>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Monthly Work History Comparison Popup Modal (Printable) -->
-    <div class="modal fade" id="monthlyWorkModal" tabindex="-1" aria-labelledby="monthlyWorkModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold" id="monthlyWorkModalLabel"><i class="fa-solid fa-chart-line me-2"></i> Monthly Work History & Comparison</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small">Here is the record of completed cars across months to track and compare work speed and performance.</p>
-                    
-                    <!-- আপনি চাইলে এখানে ব্যাকএন্ড থেকে পাঠানো মান্থলি সামারি লুপ করতে পারেন, নিচে কারেন্ট মান্থের ডিটেইল দেওয়া হলো -->
+                <div class="modal-body p-0">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped align-middle mb-0">
-                            <thead class="table-dark">
+                            <thead class="table-light">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Car Model</th>
-                                    <th>Chassis</th>
+                                    <th class="ps-3">Car Model & Chassis</th>
                                     <th>Client Company</th>
+                                    <th>Before Photos</th>
+                                    <th>Status</th>
                                     <th>Work Details</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if completed_cars %}
-                                    {% for car in completed_cars %}
-                                    <tr>
-                                        <td>{{ loop.index }}</td>
-                                        <td class="fw-bold text-success">{{ car.car_name }}</td>
-                                        <td><code>{{ car.chassis }}</code></td>
-                                        <td>{{ car.client_company }}</td>
-                                        <td>{{ car.details }}</td>
-                                    </tr>
-                                    {% endfor %}
+                                {% for car in in_progress_cars %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-primary">{{ car.car_name }}<br><code>{{ car.chassis }}</code></td>
+                                    <td>{{ car.client_company }}</td>
+                                    <td>
+                                        {% for img in car.before_images %}
+                                        <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                            <img src="{{ url_for('static', filename='uploads/' + img) }}" class="car-img-thumb" alt="Before">
+                                        </a>
+                                        {% endfor %}
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">{{ car.status }}</span></td>
+                                    <td><small>{{ car.details }}</small></td>
+                                </tr>
                                 {% else %}
-                                    <tr>
-                                        <td colspan="5" class="text-center py-3 text-muted">No completed car records found for this month.</td>
-                                    </tr>
-                                {% endif %}
+                                <tr><td colspan="5" class="text-center text-muted py-4">No in-progress cars found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-sm" onclick="window.print()"><i class="fa-solid fa-print me-1"></i> Print Work History</button>
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Waiting / Queue Modal -->
+    <div class="modal fade" id="waitingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-clock me-2"></i> Waiting / Queue Cars ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Car Model & Chassis</th>
+                                    <th>Client Company</th>
+                                    <th>Before Photos</th>
+                                    <th>Status</th>
+                                    <th>Work Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in queue_cars %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-warning">{{ car.car_name }}<br><code>{{ car.chassis }}</code></td>
+                                    <td>{{ car.client_company }}</td>
+                                    <td>
+                                        {% for img in car.before_images %}
+                                        <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                            <img src="{{ url_for('static', filename='uploads/' + img) }}" class="car-img-thumb" alt="Before">
+                                        </a>
+                                        {% endfor %}
+                                    </td>
+                                    <td><span class="badge bg-info text-dark">{{ car.status }}</span></td>
+                                    <td><small>{{ car.details }}</small></td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="5" class="text-center text-muted py-4">No waiting cars found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Completed Cars Modal -->
+    <div class="modal fade" id="completedModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-circle-check me-2"></i> Completed Cars ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Car Model & Chassis</th>
+                                    <th>Client Company</th>
+                                    <th>After Photos</th>
+                                    <th>Status</th>
+                                    <th>Work Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in completed_cars %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-success">{{ car.car_name }}<br><code>{{ car.chassis }}</code></td>
+                                    <td>{{ car.client_company }}</td>
+                                    <td>
+                                        {% for img in car.after_images %}
+                                        <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                            <img src="{{ url_for('static', filename='uploads/' + img) }}" class="car-img-thumb" alt="After">
+                                        </a>
+                                        {% endfor %}
+                                    </td>
+                                    <td><span class="badge bg-success">{{ car.status }}</span></td>
+                                    <td><small>{{ car.details }}</small></td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="5" class="text-center text-muted py-4">No completed cars found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Delivered Cars Modal -->
+    <div class="modal fade" id="deliveredModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-truck-fast me-2"></i> Delivered Cars ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Car Model & Chassis</th>
+                                    <th>Client Company</th>
+                                    <th>Delivery Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in delivered_cars %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-info">{{ car.car_name }}<br><code>{{ car.chassis }}</code></td>
+                                    <td>{{ car.client_company }}</td>
+                                    <td>{{ car.get('delivery_date', 'N/A') }}</td>
+                                    <td><span class="badge bg-success">Delivered</span></td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="4" class="text-center text-muted py-4">No delivered cars found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Advance Ledger Modal -->
+    <div class="modal fade" id="advanceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-hand-holding-dollar me-2"></i> Advance Ledger ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Date</th>
+                                    <th>Note / Description</th>
+                                    <th class="text-end pe-3">Advance Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for adv in staff.get('advance_history', []) %}
+                                <tr>
+                                    <td class="ps-3">{{ adv.get('date', 'N/A') }}</td>
+                                    <td>{{ adv.get('note', 'Advance Payment') }}</td>
+                                    <td class="text-end pe-3 text-danger fw-bold">¥{{ adv.get('amount', 0) }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">No advance records found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-3 bg-light text-end fw-bold">
+                        Total Advance for {{ selected_month }}: <span class="text-danger">¥{{ staff.get('monthly_advance_total', 0.0) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Leave Record Modal -->
+    <div class="modal fade" id="leaveModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-calendar-days me-2"></i> Leave Record ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Leave Date / Period</th>
+                                    <th>Reason / Details</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for leave in staff_leaves %}
+                                <tr>
+                                    <td class="ps-3 fw-bold">{{ leave.date or leave.get('leave_date', 'N/A') }}</td>
+                                    <td>{{ leave.reason or leave.get('details', 'No reason provided') }}</td>
+                                    <td><span class="badge bg-success">{{ leave.status|default('Approved') }}</span></td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="3" class="text-center text-muted py-3">No leave records found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Overtime & Holiday Work Modal -->
+    <div class="modal fade" id="overtimeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-business-time me-2"></i> Overtime & Holiday Work ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-clock text-primary me-2"></i> Overtime Records (+25% Bonus)</h6>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Date</th>
+                                    <th>Overtime Minutes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ot in monthly_overtime %}
+                                <tr>
+                                    <td class="ps-3">{{ ot.get('date', 'N/A') }}</td>
+                                    <td class="fw-bold text-primary">{{ ot.get('minutes', ot.get('overtime_minutes', 0)) }} Minutes</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="2" class="text-center text-muted py-2">No overtime recorded for this month.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-calendar-check text-success me-2"></i> Holiday Working Days (+25% Bonus)</h6>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Holiday Date</th>
+                                    <th>Description / Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for hw in staff.get('monthly_holidays', []) %}
+                                <tr>
+                                    <td class="ps-3">{{ hw.get('date', selected_month) }}</td>
+                                    <td class="fw-bold text-success">{{ hw.get('note', 'Full Day Holiday Work') }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="2" class="text-center text-muted py-2">No holiday work recorded for this month.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Estimated Salary Modal (Official Gorgeous Printable Salary Slip with Logo & Crystal Font) -->
+    <div class="modal fade" id="salaryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header bg-warning text-dark py-3">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-invoice-dollar me-2"></i> Official Salary Slip / Breakdown</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 bg-white" id="printableSalarySlip">
+                    
+                    <!-- Company Logo & Gorgeous Styling Header -->
+                    <div class="text-center border-bottom pb-4 mb-4">
+                        <!-- কাস্টমার ড্যাশবোর্ডের মতো প্রিমিয়াম লোগো বা আইকন -->
+                        <div class="mb-2">
+                            {% if comp.logo %}
+                            <img src="{{ url_for('static', filename='uploads/' + comp.logo) }}" alt="Company Logo" style="max-height: 60px; object-fit: contain;">
+                            {% else %}
+                            <span class="d-inline-block p-3 bg-light text-primary rounded-circle shadow-sm border">
+                                <i class="fa-solid fa-building-shield fa-2x"></i>
+                            </span>
+                            {% endif %}
+                        </div>
+                        <!-- ক্রিস্টাল/প্রিমিয়াম ফন্ট স্টাইলে কোম্পানির নাম -->
+                        <h3 class="gorgeous-company-title mb-1">{{ comp.name }}</h3>
+                        <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1"></i> {{ comp.address }} &nbsp;|&nbsp; <i class="fa-solid fa-phone me-1"></i> {{ comp.phone }}</p>
+                        <span class="badge bg-dark text-white px-4 py-2 rounded-pill shadow-sm text-uppercase tracking-wider">Salary Statement for the Month of: {{ selected_month }}</span>
+                    </div>
+
+                    <!-- Staff Details Section -->
+                    <div class="row mb-4 bg-light p-3 rounded-3 border">
+                        <div class="col-sm-6">
+                            <p class="mb-1 text-muted small text-uppercase fw-bold">Employee Name:</p>
+                            <h5 class="fw-bold text-dark mb-1">{{ staff.name }}</h5>
+                            <p class="mb-0 text-muted small">Mobile: {{ staff.get('mobile', 'N/A') }}</p>
+                        </div>
+                        <div class="col-sm-6 text-sm-end mt-2 mt-sm-0">
+                            <p class="mb-1 text-muted small text-uppercase fw-bold">Tax / Reference No:</p>
+                            <h6 class="fw-bold text-secondary mb-1">{{ comp.tax_invoice_no }}</h6>
+                            <p class="mb-0 text-muted small">Issued Date: {{ selected_month }}-28</p>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Breakdown Table -->
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Description / Earnings & Deductions</th>
+                                    <th class="text-center">Details / Units</th>
+                                    <th class="text-end">Amount (¥)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">Base Salary</td>
+                                    <td class="text-center">Standard Monthly</td>
+                                    <td class="text-end fw-bold">¥{{ staff.get('base_salary', 0) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Holiday Work Bonus (+25% Extra)</td>
+                                    <td class="text-center">{{ staff.get('monthly_holidays', [])|length }} Days</td>
+                                    <td class="text-end text-success fw-semibold">+ ¥{{ holiday_bonus }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Overtime Bonus (+25% Extra)</td>
+                                    <td class="text-center">{{ staff.get('monthly_overtime_minutes', 0) }} Minutes</td>
+                                    <td class="text-end text-success fw-semibold">+ ¥{{ overtime_bonus }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Leave / Absence Deduction</td>
+                                    <td class="text-center text-danger">{{ staff_leaves|length }} Days Absent</td>
+                                    <td class="text-end text-danger fw-semibold">- ¥{{ (staff_leaves|length * per_day_salary) | round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Monthly Advance Deduction</td>
+                                    <td class="text-center text-danger">Taken in {{ selected_month }}</td>
+                                    <td class="text-end text-danger fw-semibold">- ¥{{ staff.get('monthly_advance_total', 0) }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Net Salary Summary Box -->
+                    <div class="p-4 bg-dark text-white rounded-3 d-flex justify-content-between align-items-center shadow-sm">
+                        <div>
+                            <span class="small text-uppercase tracking-wider text-light fw-bold">Estimated Net Payable Salary</span>
+                            <h6 class="text-muted small mb-0">Includes all bonuses & deductions</h6>
+                        </div>
+                        <h2 class="text-warning fw-bold mb-0">¥{{ net_salary }}</h2>
+                    </div>
+
+                    <!-- Signature Area for Evidence -->
+                    <div class="row mt-5 pt-4 border-top text-center text-muted small">
+                        <div class="col-6">
+                            <div class="border-top border-secondary w-75 mx-auto pt-2 fw-semibold text-dark">Authorized Signature</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border-top border-secondary w-75 mx-auto pt-2 fw-semibold text-dark">Received By (Staff Signature)</div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <!-- Modal Footer with Print Button -->
+                <div class="modal-footer bg-light py-3">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btn-sm px-4 fw-bold shadow-sm" onclick="window.print()">
+                        <i class="fa-solid fa-print me-1"></i> Print Salary Slip
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Work History (This Month) -->
+    <div class="modal fade" id="monthHistoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-history me-2"></i> Work History for {{ selected_month }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Car Model & Chassis</th>
+                                    <th>Client Company</th>
+                                    <th>Status</th>
+                                    <th>Work Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in month_work_history %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-dark">{{ car.car_name }}<br><code>{{ car.chassis }}</code></td>
+                                    <td>{{ car.get('client_company', 'N/A') }}</td>
+                                    <td><span class="badge bg-secondary">{{ car.status }}</span></td>
+                                    <td><small>{{ car.details or 'No details' }}</small></td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="4" class="text-center text-muted py-4">No work history found for {{ selected_month }}.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Total Car History Modal (All-Time) -->
+    <div class="modal fade" id="totalCarHistoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-folder-open me-2"></i> Total Car History (All-Time Records)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Car Model & Chassis</th>
+                                    <th>Client Company</th>
+                                    <th>Status</th>
+                                    <th>Work Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for car in total_car_history %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-dark">{{ car.car_name }}<br><code>{{ car.chassis }}</code></td>
+                                    <td>{{ car.get('client_company', 'N/A') }}</td>
+                                    <td><span class="badge bg-secondary">{{ car.status }}</span></td>
+                                    <td><small>{{ car.details or 'No details' }}</small></td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="4" class="text-center text-muted py-4">No total car history records found.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

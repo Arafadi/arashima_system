@@ -2,30 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Staff - {{ comp.name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-light">
     <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
-            <div class="col-md-6 bg-white p-4 shadow rounded">
+            <div class="col-md-8 bg-white p-4 shadow rounded">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4>✏️ Edit Staff Profile</h4>
-                    <a href="{{ url_for('view_staff') }}" class="btn btn-outline-secondary btn-sm">Back</a>
+                    <h4 class="fw-bold"><i class="fa-solid fa-pen-to-square text-primary me-2"></i> Edit Staff Profile</h4>
+                    <a href="{{ url_for('view_staff') }}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Back</a>
                 </div>
+                
+                <!-- Main Staff Update Form -->
                 <form method="POST">
-                    <div class="mb-3"><label class="form-label">Staff Name</label><input type="text" name="name" class="form-control" value="{{ st.name }}" required></div>
-                    <div class="mb-3"><label class="form-label">Mobile Number</label><input type="text" name="mobile" class="form-control" value="{{ st.mobile }}" required></div>
-                    <div class="mb-3"><label class="form-label">Base Salary (¥)</label><input type="number" name="base_salary" class="form-control" value="{{ st.base_salary }}" required></div>
-		        <!-- Base Salary Field এর নিচে এই কোডটুকু বসিয়ে দিন -->
-<div class="mb-3">
-    <label for="advance_balance" class="form-label fw-bold">Advance Due / Balance (¥)</label>
-    <input type="number" step="any" class="form-control" id="advance_balance" name="advance_balance" value="{{ st.get('advance_balance', 0) }}">
-</div>
-                    <div class="mb-3"><label class="form-label">Login Username</label><input type="text" name="username" class="form-control" value="{{ st.username }}" required></div>
-                    <div class="mb-3"><label class="form-label">New Password (leave blank to keep current)</label><input type="password" name="password" class="form-control" placeholder="Enter new password if needed"></div>
-                    <button type="submit" class="btn btn-primary w-100">Update Staff Profile</button>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Staff Name</label>
+                        <input type="text" name="name" class="form-control" value="{{ st.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mobile Number</label>
+                        <input type="text" name="mobile" class="form-control" value="{{ st.mobile }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Base Salary (¥)</label>
+                        <input type="number" name="base_salary" class="form-control" value="{{ st.base_salary }}" required>
+                    </div>
+                    
+                    <!-- Advance Due / Balance Field -->
+                    <div class="mb-3">
+                        <label for="advance_balance" class="form-label fw-bold text-danger">Total Advance Due / Balance (¥)</label>
+                        <input type="number" step="any" class="form-control bg-light" id="advance_balance" name="advance_balance" value="{{ st.get('advance_balance', 0) }}" readonly>
+                        <div class="form-text">This value updates automatically when you add or delete advance records below.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Login Username</label>
+                        <input type="text" name="username" class="form-control" value="{{ st.username }}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">New Password (leave blank to keep current)</label>
+                        <input type="password" name="password" class="form-control" placeholder="Enter new password if needed">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 mb-4 fw-bold"><i class="fa-solid fa-check me-1"></i> Update Staff Profile</button>
                 </form>
+
+                <hr class="my-4">
+
+                <!-- Advance Management & History Section -->
+                <div class="card border-danger mb-3">
+                    <div class="card-header bg-danger text-white py-2 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fs-6 fw-bold"><i class="fa-solid fa-hand-holding-dollar me-2"></i> Advance Taking History & Add</h5>
+                        <span class="badge bg-light text-dark">Total: ¥{{ st.get('advance_balance', 0.0) }}</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Add Advance Form with Date -->
+                        <form action="{{ url_for('add_advance', staff_id=st.id) }}" method="POST" class="row g-2 mb-4 bg-light p-3 rounded border">
+                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-plus-circle text-success me-1"></i> Add New Advance Entry</h6>
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold">Advance Date (তারিখ)</label>
+                                <input type="date" name="advance_date" class="form-control form-control-sm" value="{{ today_date }}" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold">Amount (¥)</label>
+                                <input type="number" step="any" name="advance_amount" class="form-control form-control-sm" placeholder="Enter amount (e.g. 5000)" required>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-sm btn-success w-100 fw-bold"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
+                        </form>
+
+                        <!-- Advance Records Table -->
+                        <h6 class="fw-bold text-secondary mb-2">Previous Advance History Records:</h6>
+                        {% if st.get('advance_history') %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm table-striped align-middle mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Date (তারিখ)</th>
+                                        <th>Amount (টাকা/ইয়েন)</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for adv in st.get('advance_history') %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td><span class="text-danger fw-bold"><i class="far fa-calendar-alt me-1"></i> {{ adv.date }}</span></td>
+                                        <td class="fw-bold text-danger">¥{{ "%.2f"|format(adv.amount) }}</td>
+                                        <td class="text-center">
+                                            <form action="{{ url_for('delete_advance', staff_id=st.id, adv_id=adv.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this advance entry?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" title="Delete entry"><i class="fas fa-trash"></i> Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted text-center py-2 mb-0 small">No advance history records found for this staff member.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

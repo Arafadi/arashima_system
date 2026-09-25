@@ -8,107 +8,170 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #495057;
-        }
-        .btn {
-            border-radius: 8px;
-            font-weight: 500;
-        }
-    </style>
 </head>
-<body>
+<body class="bg-light">
 
-    <!-- Top Navbar -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="{{ url_for('admin_dashboard') }}">
-                <i class="fa-solid fa-gauge-high text-warning me-2"></i> {{ comp.name }} <span class="badge bg-success ms-2 fs-6">Staff Management</span>
+            <a class="navbar-brand fw-bold" href="/admin/dashboard">
+                <i class="fa-solid fa-gauge-high text-warning me-2"></i> {{ comp.name }} <span class="badge bg-warning text-dark ms-2 fs-6">Staff Management</span>
             </a>
-            <div class="d-flex gap-2">
-                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-light btn-sm px-3"><i class="fa-solid fa-arrow-left me-1"></i> Dashboard</a>
-                <a href="{{ url_for('add_staff') }}" class="btn btn-success btn-sm px-3"><i class="fa-solid fa-user-gear me-1"></i> Add Staff</a>
+            <div class="d-flex">
+                <a href="/admin/dashboard" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Container -->
-    <div class="container-fluid px-4 py-4">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-user-tie text-success me-2"></i> All Staff Profiles & Work Performance</h5>
-                <span class="badge bg-secondary">Total Staff: {{ staff_profiles|length }}</span>
+    <div class="container-fluid py-4 px-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-user-tie text-warning me-2"></i> All Registered Staff Profiles</h5>
+                <a href="{{ url_for('add_staff') }}" class="btn btn-success btn-sm"><i class="fa-solid fa-user-gear me-1"></i> Add New Staff</a>
             </div>
             <div class="card-body p-0">
-                {% if staff_profiles %}
                 <div class="table-responsive">
                     <table class="table table-hover table-striped align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="py-3 ps-3">Staff Name & Username</th>
-                                <th class="py-3">Contact Info</th>
-                                <th class="py-3">Base Salary (¥)</th>
-                                <th class="py-3 text-center">Assigned Tasks Status</th>
-                                <th class="py-3 text-center">Actions</th>
+                                <th class="ps-3">Staff Name</th>
+                                <th>Username & Password</th>
+                                <th>Contact Information</th>
+                                <th>Salary & Advance</th>
+                                <th>Leave / Absent (This Month)</th>
+                                <th>Assigned Tasks & Progress</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for sp in staff_profiles %}
-                            <tr>
-                                <td class="ps-3">
-                                    <div class="fw-bold text-success fs-6">{{ sp.info.name }}</div>
-                                    <small class="text-secondary">Username: <code>{{ sp.info.username }}</code></small>
-                                </td>
-                                <td>
-                                    <div><i class="fa-solid fa-phone text-success me-1"></i> {{ sp.info.mobile }}</div>
-                                </td>
-                                <td>
-                                    <div class="fw-bold text-dark">¥{{ sp.info.base_salary }}</div>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary px-2 py-1">Total: {{ sp.total_assigned }}</span>
-                                    <span class="badge bg-warning text-dark px-2 py-1">In Progress: {{ sp.in_progress }}</span>
-                                    <span class="badge bg-success px-2 py-1">Completed: {{ sp.completed }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a href="{{ url_for('edit_staff', staff_id=sp.info.id) }}" class="btn btn-outline-primary btn-sm shadow-sm"><i class="fa-solid fa-pen-to-square me-1"></i> Edit</a>
-                                        <form action="{{ url_for('delete_staff', staff_id=sp.info.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?');" style="margin: 0;">
-                                            <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm"><i class="fa-solid fa-trash-can me-1"></i> Delete</button>
-                                        </form>
+                            {% if staff_list %}
+                                {% for st in staff_list %}
+                                <tr>
+                                    <!-- Staff Name -->
+                                    <td class="ps-3">
+                                        <div class="fw-bold text-dark"><i class="fa-solid fa-user-circle text-primary me-1"></i> {{ st.name }}</div>
+                                    </td>
+
+                                    <!-- Username & Password -->
+                                    <td>
+                                        <div><i class="fa-solid fa-user text-muted me-1"></i> <strong>{{ st.username }}</strong></div>
+                                        <small class="text-danger"><i class="fa-solid fa-key me-1"></i> Pass: {{ st.password }}</small>
+                                    </td>
+
+                                    <!-- Contact Info -->
+                                    <td>
+                                        <div><i class="fa-solid fa-phone text-muted me-1"></i> {{ st.contact }}</div>
+                                        <small class="text-muted"><i class="fa-solid fa-location-dot me-1"></i> {{ st.address }}</small>
+                                    </td>
+
+                                    <!-- Basic Salary & Advance -->
+                                    <td>
+                                        <div class="fw-bold text-primary">Salary: ¥{{ st.get('basic_salary', 0) }}</div>
+                                        <small class="text-danger fw-semibold"><i class="fa-solid fa-hand-holding-dollar me-1"></i> Advance: ¥{{ st.get('advance', 0) }}</small>
+                                    </td>
+
+                                    <!-- Current Month Leave / Absent -->
+                                    <td>
+                                        <span class="badge bg-warning text-dark px-2 py-1">
+                                            <i class="fa-solid fa-calendar-xmark me-1"></i> {{ st.get('leave_count', 0) }} Days Absent
+                                        </span>
+                                    </td>
+
+                                    <!-- Assigned Tasks & Completed Cars -->
+                                    <td>
+                                        <div class="small text-secondary mb-1">
+                                            <strong>Tasks:</strong> {{ st.get('assigned_tasks', 'None') }}
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-success bg-opacity-15 text-success border border-success">
+                                                Completed Cars: {{ st.get('completed_cars_count', 0) }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Action: Edit & Delete Buttons -->
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Edit Button -->
+                                            <button class="btn btn-sm btn-outline-primary px-2" data-bs-toggle="modal" data-bs-target="#editStaffModal{{ loop.index }}">
+                                                <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                                            </button>
+
+                                            <!-- Delete Form & Button (Using loop.index or st.username to avoid _id error) -->
+                                            <form action="{{ url_for('delete_staff', staff_id=st.get('id', st.username)) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this staff member?');" style="margin: 0;">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger px-2">
+                                                    <i class="fa-solid fa-trash-can me-1"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Edit Staff Modal (Popup Form) -->
+                                <div class="modal fade" id="editStaffModal{{ loop.index }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form action="{{ url_for('update_staff', staff_id=st.get('id', st.username)) }}" method="POST">
+                                                <div class="modal-header bg-warning text-dark">
+                                                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-gear me-2"></i> Edit Staff: {{ st.name }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-start">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Staff Name</label>
+                                                        <input type="text" name="name" class="form-control" value="{{ st.name }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Username</label>
+                                                        <input type="text" name="username" class="form-control" value="{{ st.username }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Contact Number</label>
+                                                        <input type="text" name="contact" class="form-control" value="{{ st.contact }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Address</label>
+                                                        <textarea name="address" class="form-control" rows="2">{{ st.address }}</textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Basic Salary (¥)</label>
+                                                        <input type="number" name="basic_salary" class="form-control" value="{{ st.get('basic_salary', 0) }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Advance Taken (¥)</label>
+                                                        <input type="number" name="advance" class="form-control" value="{{ st.get('advance', 0) }}">
+                                                    </div>
+                                                    <hr>
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold text-danger"><i class="fa-solid fa-key me-1"></i> Reset Password</label>
+                                                        <input type="text" name="new_password" class="form-control" placeholder="Enter new password (leave blank to keep old)">
+                                                        <small class="text-muted">Fill this only if you want to change this staff's portal login password.</small>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-success btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i> Save Changes</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                                </div>
+                                <!-- End Modal -->
+
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">No staff members found in the system.</td>
+                                </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
-                {% else %}
-                <div class="text-center py-5">
-                    <i class="fa-solid fa-users-slash fs-1 text-muted opacity-50 mb-2"></i>
-                    <p class="text-muted mb-0">No staff profiles created yet.</p>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Bootstrap 5.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

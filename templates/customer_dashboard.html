@@ -4,489 +4,581 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard - {{ comp.name }}</title>
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .navbar { background: linear-gradient(135deg, #1e3c72, #2a5298); }
-        .card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .stat-card { border-left: 4px solid #2a5298; transition: transform 0.2s; }
-        .stat-card-clickable { cursor: pointer; }
-        .stat-card-clickable:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-        .table img { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; margin-right: 2px; }
-        .clickable-badge { cursor: pointer; transition: transform 0.2s; }
-        .clickable-badge:hover { transform: scale(1.05); }
-
-        /* প্রিন্ট করার সময় শুধু মডাল বা প্রিনটেবল অংশ দেখানোর জন্য স্টাইল */
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+        .stat-card {
+            border-left: 5px solid;
+            cursor: pointer;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        .car-img-thumb {
+            width: 70px;
+            height: 55px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .car-img-thumb:hover {
+            transform: scale(1.05);
+        }
         @media print {
-            body * { visibility: hidden; }
-            #printableMonthlyModal, #printableMonthlyModal * { visibility: visible; }
-            #printableMonthlyModal { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
-            .modal-footer, .btn-close { display: none !important; }
+            body {
+                background-color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .modal-dialog {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .modal-content {
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .modal-body {
+                padding: 0 !important;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#"><i class="fas fa-car-side me-2"></i>{{ comp.name }} - Customer Portal</a>
-            
-            <div class="d-flex align-items-center">
-                <!-- Monthly Filter Form inside Navbar -->
-                <form method="GET" action="{{ url_for('customer_dashboard') }}" class="d-flex align-items-center me-3 bg-white p-1 rounded shadow-sm">
-                    <label class="small text-muted fw-bold px-2 mb-0"><i class="fas fa-calendar-alt text-primary me-1"></i> Month:</label>
-                    <input type="month" name="month" value="{{ selected_month }}" class="form-control form-control-sm border-0 bg-light me-1" onchange="this.form.submit()">
-                </form>
-
-                <span class="text-white me-3 d-none d-md-inline"><i class="fas fa-user-circle me-1"></i> {{ session.name }}</span>
-                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 no-print">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fa-solid fa-car-side text-warning me-2"></i> Customer Portal: <span class="text-info">{{ session.name }}</span>
+            </a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-light small"><i class="fa-solid fa-building me-1"></i> {{ cust.company_name if cust else session.name }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
+                </a>
             </div>
         </div>
     </nav>
 
-    <div class="container my-4">
-        
-        <!-- Welcome Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="p-4 bg-white rounded-3 shadow-sm border-start border-primary border-4">
-                    <h3 class="fw-bold text-dark mb-1">Welcome, {{ cust.company_name if cust else session.name }}!</h3>
-                    <p class="text-muted mb-0">Here is the live status of your vehicles, financial summaries, and delivery records.</p>
+    <!-- Main Container -->
+    <div class="container-fluid px-4 py-4 no-print">
+
+        <!-- Overall Summary Cards (All-time) -->
+        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-chart-pie text-primary me-2"></i> Overall Account Summary (All-time)</h5>
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card border-primary p-3 bg-white h-100">
+                    <p class="text-muted mb-1 small fw-bold text-uppercase">Total Contract Amount</p>
+                    <h3 class="text-primary fw-bold mb-0">¥{{ total_contract }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-success p-3 bg-white h-100">
+                    <p class="text-muted mb-1 small fw-bold text-uppercase">Total Paid Amount</p>
+                    <h3 class="text-success fw-bold mb-0">¥{{ total_paid }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-danger p-3 bg-white h-100">
+                    <p class="text-muted mb-1 small fw-bold text-uppercase">Total Due Amount</p>
+                    <h3 class="text-danger fw-bold mb-0">¥{{ total_due }}</h3>
                 </div>
             </div>
         </div>
 
-        <!-- Overall Statistics Cards (All Time) -->
-        <h5 class="fw-bold text-secondary mb-3"><i class="fas fa-chart-pie me-2"></i>Overall Summary (All Time)</h5>
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card stat-card p-3 bg-white">
-                    <div class="text-muted small fw-bold">TOTAL CONTRACT VALUE</div>
-                    <h3 class="fw-bold text-primary mb-0">¥{{ "{:,.0f}".format(total_contract) }}</h3>
+        <!-- Monthly Filter Bar & Action Buttons -->
+        <div class="card shadow-sm p-3 mb-4 bg-white">
+            <div class="row align-items-center justify-content-between g-3">
+                <div class="col-md-4">
+                    <form method="GET" action="{{ url_for('customer_dashboard') }}" class="d-flex align-items-center gap-2">
+                        <label class="fw-bold small text-muted mb-0 text-nowrap">Select Month:</label>
+                        <input type="month" name="month" class="form-control form-control-sm" value="{{ selected_month }}" onchange="this.form.submit()">
+                        <span class="badge bg-secondary fs-7 text-nowrap px-2 py-2">
+                            <i class="fa-regular fa-calendar me-1"></i> {{ selected_month }}
+                        </span>
+                    </form>
                 </div>
-            </div>
-            <!-- Total Paid Card (Clickable to open Paid History Modal) -->
-            <div class="col-md-4">
-                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #28a745;" data-bs-toggle="modal" data-bs-target="#totalPaidModal" title="Click to view all payment records">
-                    <div class="text-muted small fw-bold">TOTAL PAID <i class="fas fa-external-link-alt float-end text-success"></i></div>
-                    <h3 class="fw-bold text-success mb-0">¥{{ "{:,.0f}".format(total_paid) }}</h3>
-                </div>
-            </div>
-            <!-- Total Due Card (Clickable to open Due Modal) -->
-            <div class="col-md-4">
-                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #dc3545;" data-bs-toggle="modal" data-bs-target="#totalDueModal" title="Click to view due cars">
-                    <div class="text-muted small fw-bold">TOTAL DUE <i class="fas fa-external-link-alt float-end text-danger"></i></div>
-                    <h3 class="fw-bold text-danger mb-0">¥{{ "{:,.0f}".format(total_due) }}</h3>
-                </div>
-            </div>
-        </div>
-
-        <!-- Monthly Report Statistics Cards -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold text-secondary mb-0"><i class="fas fa-calendar-check me-2"></i>Monthly Report for: <span class="text-primary">{{ selected_month }}</span></h5>
-            <span class="badge bg-info text-dark p-2 fs-6 clickable-badge shadow-sm" data-bs-toggle="modal" data-bs-target="#monthlyDeliveredModal">
-                <i class="fas fa-car me-1"></i> Delivered Cars this month: <strong>{{ monthly_cars|length }}</strong> <i class="fas fa-external-link-alt ms-1 small"></i>
-            </span>
-        </div>
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card stat-card p-3 bg-white" style="border-left-color: #17a2b8;">
-                    <div class="text-muted small fw-bold">MONTHLY DELIVERED VALUE</div>
-                    <h3 class="fw-bold text-info mb-0">¥{{ "{:,.0f}".format(monthly_contract) }}</h3>
-                </div>
-            </div>
-            <!-- Monthly Paid Card (Clickable) -->
-            <div class="col-md-4">
-                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #28a745;" data-bs-toggle="modal" data-bs-target="#monthlyPaidModal" title="Click to view monthly paid records">
-                    <div class="text-muted small fw-bold">MONTHLY PAID <i class="fas fa-external-link-alt float-end text-success"></i></div>
-                    <h3 class="fw-bold text-success mb-0">¥{{ "{:,.0f}".format(monthly_paid) }}</h3>
-                </div>
-            </div>
-            <!-- Monthly Due Card (Clickable) -->
-            <div class="col-md-4">
-                <div class="card stat-card stat-card-clickable p-3 bg-white" style="border-left-color: #ffc107;" data-bs-toggle="modal" data-bs-target="#monthlyDueModal" title="Click to view monthly due cars">
-                    <div class="text-muted small fw-bold">MONTHLY DUE <i class="fas fa-external-link-alt float-end text-warning"></i></div>
-                    <h3 class="fw-bold text-warning mb-0">¥{{ "{:,.0f}".format(monthly_due) }}</h3>
+                <div class="col-md-8 text-md-end d-flex justify-content-md-end gap-2 flex-wrap">
+                    <button type="button" class="btn btn-primary btn-sm fw-bold shadow-sm px-3 py-2" data-bs-toggle="modal" data-bs-target="#monthlyCarsDetailsModal">
+                        <i class="fa-solid fa-list-check me-1"></i> View Monthly Cars ({{ monthly_cars|length }})
+                    </button>
+                    <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm px-3 py-2" data-bs-toggle="modal" data-bs-target="#printMonthlyReportModal">
+                        <i class="fa-solid fa-print me-1"></i> Print Delivery Statement
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Cars Table Section (All Cars) -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-secondary"><i class="fas fa-list me-2"></i>All Vehicles & Progress Tracking</h5>
+        <!-- Monthly Clickable Popup Summary Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card stat-card border-info p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#monthlyCarsModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Monthly Cars</p>
+                            <h3 class="text-info fw-bold mb-0">{{ monthly_cars|length }} <small class="fs-6 text-muted fw-normal">(Units)</small></h3>
+                            <small class="text-muted fs-7">For {{ selected_month }}</small>
+                        </div>
+                        <div class="fs-1 text-info opacity-25"><i class="fa-solid fa-car"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card stat-card border-primary p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#monthlyContractModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Monthly Contract</p>
+                            <h3 class="text-primary fw-bold mb-0">¥{{ monthly_contract }}</h3>
+                            <small class="text-primary fs-7 fw-semibold"><i class="fa-solid fa-file-invoice-dollar me-1"></i>Total Value</small>
+                        </div>
+                        <div class="fs-1 text-primary opacity-25"><i class="fa-solid fa-file-invoice"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card stat-card border-success p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#monthlyPaidModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Monthly Paid</p>
+                            <h3 class="text-success fw-bold mb-0">¥{{ monthly_paid }}</h3>
+                            <small class="text-success fs-7 fw-semibold"><i class="fa-solid fa-circle-check me-1"></i>Cleared</small>
+                        </div>
+                        <div class="fs-1 text-success opacity-25"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card stat-card border-danger p-3 bg-white h-100" data-bs-toggle="modal" data-bs-target="#monthlyDueModal" role="button">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1 small fw-bold text-uppercase">Monthly Due</p>
+                            <h3 class="text-danger fw-bold mb-0">¥{{ monthly_due_calc if monthly_due_calc is defined else (monthly_contract - monthly_paid) }}</h3>
+                            <small class="text-danger fs-7 fw-semibold"><i class="fa-solid fa-triangle-exclamation me-1"></i>Pending Balance</small>
+                        </div>
+                        <div class="fs-1 text-danger opacity-25"><i class="fa-solid fa-wallet"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Registered Cars Table -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white py-3 border-0">
+                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-car-side text-primary me-2"></i> All Registered Cars & Work Progress</h5>
             </div>
             <div class="card-body p-0">
+                {% if cars %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>#</th>
-                                <th>Car Name / Chassis</th>
-                                <th>Dates (Receive & Delivery)</th>
-                                <th>Financials</th>
-                                <th>Status</th>
-                                <th>Photos (Before / After)</th>
-                                <th class="text-center">Invoice</th>
+                                <th class="py-3 ps-3">Car & Chassis</th>
+                                <th class="py-3">Status & Date</th>
+                                <th class="py-3">Before Photos</th>
+                                <th class="py-3">After Photos</th>
+                                <th class="py-3">Work Details</th>
+                                <th class="py-3 text-end pe-3">Financials</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% if cars %}
-                                {% for car in cars %}
-                                <tr>
-                                    <td class="fw-bold">{{ loop.index }}</td>
-                                    <td>
-                                        <div class="fw-bold text-dark">{{ car.car_name }}</div>
-                                        <small class="text-muted font-monospace">Chassis: {{ car.chassis }}</small><br>
-                                        <small class="badge bg-light text-dark border">Color: {{ car.color_name }}</small>
-                                    </td>
-                                    <td>
-                                        <div class="small">
-                                            <span class="text-muted"><i class="fas fa-calendar-alt text-primary me-1"></i> Received:</span> 
-                                            <span class="fw-semibold">{{ car.get('receiving_date', 'N/A') }}</span>
-                                        </div>
-                                        <div class="small mt-1">
-                                            <span class="text-muted"><i class="fas fa-calendar-check text-success me-1"></i> Delivery:</span> 
-                                            {% if car.get('delivery_date') %}
-                                                <span class="fw-semibold text-success">{{ car.get('delivery_date') }}</span>
-                                            {% else %}
-                                                <span class="text-danger fst-italic">Pending Delivery</span>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="small">Contract: <span class="fw-bold">¥{{ "{:,.0f}".format(car.contract) }}</span></div>
-                                        <div class="small text-success">Paid: ¥{{ "{:,.0f}".format(car.received) }}</div>
-                                        <div class="small text-danger">Due: ¥{{ "{:,.0f}".format(car.contract - car.received) }}</div>
-                                    </td>
-                                    <td>
-                                        {% if car.status == 'Delivered' %}
-                                            <span class="badge bg-success">Delivered</span>
-                                        {% elif car.status == 'Completed' %}
-                                            <span class="badge bg-info text-dark">Completed</span>
-                                        {% else %}
-                                            <span class="badge bg-warning text-dark">In Progress</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <div style="max-width: 150px; overflow-x: auto; white-space: nowrap;">
-                                            {% if car.before_images %}
-                                                {% for img in car.before_images %}
-                                                    <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
-                                                        <img src="{{ url_for('static', filename='uploads/' + img) }}" title="Before Image" class="border">
-                                                    </a>
-                                                {% endfor %}
-                                            {% endif %}
-                                            {% if car.after_images %}
-                                                {% for img in car.after_images %}
-                                                    <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
-                                                        <img src="{{ url_for('static', filename='uploads/' + img) }}" title="After Image" class="border border-success">
-                                                    </a>
-                                                {% endfor %}
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ url_for('customer_invoice', car_id=car.id) }}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                            <i class="fas fa-file-invoice me-1"></i> Invoice
+                            {% for car in cars %}
+                            <tr>
+                                <td class="ps-3">
+                                    <div class="fw-bold text-primary">{{ car.car_name }}</div>
+                                    <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
+                                </td>
+                                <td>
+                                    <span class="badge {% if car.status == 'Completed' or car.status == 'Delivered' %}bg-success{% else %}bg-warning text-dark{% endif %} mb-1">
+                                        {{ car.status }}
+                                    </span><br>
+                                    <small class="text-muted">Delivery: {{ car.get('delivery_date', 'N/A') }}</small>
+                                </td>
+                                <td>
+                                    {% if car.before_images %}
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for img in car.before_images %}
+                                        <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                            <img src="{{ url_for('static', filename='uploads/' + img) }}" class="car-img-thumb" alt="Before">
                                         </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="7" class="text-center py-4 text-muted">No vehicles found assigned to your account.</td>
-                                </tr>
-                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <small class="text-muted">No photo</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if car.after_images %}
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for img in car.after_images %}
+                                        <a href="{{ url_for('static', filename='uploads/' + img) }}" target="_blank">
+                                            <img src="{{ url_for('static', filename='uploads/' + img) }}" class="car-img-thumb" alt="After">
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <small class="text-muted">Pending</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-muted">{{ car.details or 'No details provided.' }}</small>
+                                </td>
+                                <td class="text-end pe-3">
+                                    <div class="fw-bold">Contract: ¥{{ car.contract }}</div>
+                                    <div class="text-success small">Paid: ¥{{ car.received }}</div>
+                                    <div class="text-danger small">Due: ¥{{ car.contract - car.received }}</div>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <p class="mb-0">No cars found for your company.</p>
+                </div>
+                {% endif %}
             </div>
         </div>
 
     </div>
 
-    <!-- 1. Total Paid History Modal -->
-    <div class="modal fade" id="totalPaidModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <!-- ================= MODALS ================= -->
+
+    <!-- 1. Monthly Cars Detailed List Modal -->
+    <div class="modal fade" id="monthlyCarsDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-receipt me-2"></i> All-Time Payment History</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-car-side me-2"></i> Monthly Cars & Invoices List ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p class="text-muted small">List of all individual payments made across all vehicles with dates. (Admins can edit/remove incorrect entries if needed).</p>
+                <div class="modal-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle">
+                        <table class="table table-bordered table-striped align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th>Car Name / Chassis</th>
-                                    <th>Payment Date</th>
-                                    <th>Amount</th>
+                                    <th class="py-3 ps-3">Car Name</th>
+                                    <th>Chassis Number</th>
+                                    <th>Color</th>
+                                    <th>Status</th>
+                                    <th>Contract (¥)</th>
+                                    <th>Paid (¥)</th>
+                                    <th>Due (¥)</th>
+                                    <th class="text-center">Action / Invoice</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% set has_payments = false %}
-                                {% for car in cars %}
-                                    {% if car.payment_history %}
-                                        {% for pay in car.payment_history %}
-                                            {% set has_payments = true %}
-                                            <tr>
-                                                <td>
-                                                    <strong>{{ car.car_name }}</strong><br>
-                                                    <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
-                                                </td>
-                                                <td><span class="badge bg-secondary">{{ pay.date }}</span></td>
-                                                <td class="fw-bold text-success">¥{{ "{:,.0f}".format(pay.amount) }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    {% endif %}
+                                {% for car in monthly_cars %}
+                                {% set car_due = car.contract - car.received %}
+                                <tr>
+                                    <td class="ps-3 fw-bold text-primary">{{ car.car_name }}</td>
+                                    <td><code class="bg-light text-dark px-1 rounded">{{ car.chassis }}</code></td>
+                                    <td>
+                                        {{ car.get('color_name', 'N/A') }} 
+                                        {% if car.get('color_code') %}
+                                        <span class="badge border text-dark ms-1" style="background-color: {{ car.color_code }};">&nbsp;&nbsp;</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if car.status == 'Completed' or car.status == 'Delivered' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                            {{ car.status }}
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold text-primary">¥{{ car.contract }}</td>
+                                    <td class="text-success">¥{{ car.received }}</td>
+                                    <td class="text-danger fw-bold">¥{{ car_due }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('customer_invoice', car_id=car.id) }}" class="btn btn-sm btn-outline-primary shadow-sm" target="_blank">
+                                            <i class="fa-solid fa-file-lines me-1"></i> View Invoice
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-4">No cars recorded for this month ({{ selected_month }}).</td>
+                                </tr>
                                 {% endfor %}
-                                {% if not has_payments %}
-                                    <tr><td colspan="3" class="text-center text-muted py-3">No payment records found.</td></tr>
-                                {% endif %}
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
             </div>
         </div>
     </div>
 
-    <!-- 2. Total Due Cars Modal -->
-    <div class="modal fade" id="totalDueModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <!-- 2. Print Monthly Delivery Statement Modal -->
+    <div class="modal fade" id="printMonthlyReportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-dark text-white no-print py-3">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-invoice-dollar text-warning me-2"></i> Official Monthly Delivery Statement ({{ selected_month }})</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-5 bg-white">
+                    
+                    <!-- Gorgeous WoW Company Header -->
+                    <div class="row align-items-center border-bottom pb-4 mb-4">
+                        <div class="col-md-7">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-dark text-warning p-3 rounded-3 fs-2 shadow-sm">
+                                    <i class="fa-solid fa-car-burst"></i>
+                                </div>
+                                <div>
+                                    <h2 class="fw-bold text-dark mb-1 tracking-wide">{{ comp.name }}</h2>
+                                    <p class="text-muted mb-1 small"><i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ comp.address }}</p>
+                                    <p class="text-muted mb-0 small">
+                                        <i class="fa-solid fa-phone me-1 text-success"></i> {{ comp.phone }} &nbsp;|&nbsp; 
+                                        <i class="fa-solid fa-envelope me-1 text-primary"></i> {{ comp.email if comp.email else 'arashimainzai@gmail.com' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                            <div class="p-3 bg-light rounded-3 border d-inline-block text-start">
+                                <h6 class="text-uppercase fw-bold text-primary mb-1 small">Tax Invoice / Reg No</h6>
+                                <p class="fw-bold text-dark mb-1 fs-6">{{ comp.tax_invoice_no if comp.tax_invoice_no else 'T7040001122584' }}</p>
+                                <span class="badge bg-dark text-white px-2 py-1">Period: {{ selected_month }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client & Statement Meta Info -->
+                    <div class="row mb-4 align-items-center bg-light p-3 rounded-3 border">
+                        <div class="col-md-6">
+                            <span class="text-muted small text-uppercase fw-bold d-block">Billed To Client:</span>
+                            <h4 class="fw-bold text-dark mb-0">{{ cust.company_name if cust else session.name }}</h4>
+                            <p class="text-muted small mb-0">{{ cust.address if cust and cust.address else '' }}</p>
+                        </div>
+                        <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                            <span class="text-muted small text-uppercase fw-bold d-block">Statement Date:</span>
+                            <span class="fw-bold text-dark">Current Billing Cycle</span>
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-circle-check text-success me-2"></i> Delivered Vehicles Summary (Only Delivered)</h5>
+
+                    <!-- Report Table (Filtered to Delivered cars) -->
+                    <div class="table-responsive mb-4">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table-dark text-center align-middle">
+                                <tr>
+                                    <th class="py-3">#</th>
+                                    <th class="py-3">Car Model</th>
+                                    <th class="py-3">Chassis No</th>
+                                    <th class="py-3">Color</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="py-3">Delivery Date</th>
+                                    <th class="py-3 text-end">Contract (¥)</th>
+                                    <th class="py-3 text-end">Paid (¥)</th>
+                                    <th class="py-3 text-end">Due (¥)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set delivered_count = namespace(total=0, contract=0, paid=0) %}
+                                {% for car in monthly_cars %}
+                                    {% if car.status == 'Delivered' %}
+                                        {% set delivered_count.total = delivered_count.total + 1 %}
+                                        {% set delivered_count.contract = delivered_count.contract + car.contract %}
+                                        {% set delivered_count.paid = delivered_count.paid + car.received %}
+                                        {% set car_due = car.contract - car.received %}
+                                        <tr>
+                                            <td class="text-center fw-bold">{{ delivered_count.total }}</td>
+                                            <td class="fw-bold text-primary">{{ car.car_name }}</td>
+                                            <td><code>{{ car.chassis }}</code></td>
+                                            <td>{{ car.get('color_name', 'N/A') }}</td>
+                                            <td class="text-center"><span class="badge bg-success px-2 py-1">Delivered</span></td>
+                                            <td class="text-center"><span class="text-muted small">{{ car.get('delivery_date', 'N/A') }}</span></td>
+                                            <td class="text-end fw-bold">¥{{ car.contract }}</td>
+                                            <td class="text-end text-success fw-bold">¥{{ car.received }}</td>
+                                            <td class="text-end text-danger fw-bold">¥{{ car_due }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if delivered_count.total == 0 %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-4">No delivered cars found for this month ({{ selected_month }}).</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Financial Summary Box -->
+                    <div class="row justify-content-end mb-5">
+                        <div class="col-md-5">
+                            <div class="card border-0 bg-light p-3 shadow-sm">
+                                <h6 class="fw-bold text-uppercase text-dark border-bottom pb-2 mb-3">Delivery Financial Summary</h6>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Total Delivered Units:</span>
+                                    <span class="fw-bold text-dark">{{ delivered_count.total }} Units</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Delivered Contract Total:</span>
+                                    <span class="fw-bold text-primary">¥{{ delivered_count.contract }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Delivered Paid Total:</span>
+                                    <span class="fw-bold text-success">¥{{ delivered_count.paid }}</span>
+                                </div>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold text-danger">Delivered Due Total:</span>
+                                    <span class="fw-bold text-danger fs-5">¥{{ delivered_count.contract - delivered_count.paid }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signature Section -->
+                    <div class="row mt-5 pt-4 border-top">
+                        <div class="col-6">
+                            <p class="small text-muted mb-5">Authorized Stamp & Signature</p>
+                            <p class="fw-bold text-dark mb-0">{{ comp.name }}</p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p class="small text-muted mb-5">Client Confirmation</p>
+                            <p class="fw-bold text-dark mb-0">{{ cust.company_name if cust else session.name }}</p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer bg-light py-3 no-print">
+                    <button type="button" class="btn btn-secondary btn-sm px-3" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success btn-sm fw-bold px-4 py-2 shadow-sm" onclick="window.print()">
+                        <i class="fa-solid fa-print me-1"></i> Print / Save PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Monthly Cars Modal -->
+    <div class="modal fade" id="monthlyCarsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-car me-2"></i> Cars for {{ selected_month }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for car in monthly_cars %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ car.car_name }}</strong> (Chassis: <code>{{ car.chassis }}</code>)
+                            </div>
+                            <span class="badge bg-success">{{ car.status }}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted">No cars recorded for this month.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Monthly Contract Modal -->
+    <div class="modal fade" id="monthlyContractModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-file-invoice me-2"></i> Contract Breakdown for {{ selected_month }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for car in monthly_cars %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div><strong>{{ car.car_name }}</strong> ({{ car.chassis }})</div>
+                            <span class="fw-bold text-primary">¥{{ car.contract }}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted">No records found.</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="mt-3 text-end fw-bold fs-5">Total Monthly Contract: ¥{{ monthly_contract }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Monthly Paid Modal -->
+    <div class="modal fade" id="monthlyPaidModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-circle-check me-2"></i> Paid Breakdown for {{ selected_month }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for car in monthly_cars %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div><strong>{{ car.car_name }}</strong> ({{ car.chassis }})</div>
+                            <span class="fw-bold text-success">¥{{ car.received }}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted">No records found.</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="mt-3 text-end fw-bold fs-5">Total Monthly Paid: ¥{{ monthly_paid }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Monthly Due Modal -->
+    <div class="modal fade" id="monthlyDueModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-wallet me-2"></i> All Vehicles with Due Amounts</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title"><i class="fa-solid fa-wallet me-2"></i> Due Breakdown for {{ selected_month }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Car Name / Chassis</th>
-                                    <th>Contract</th>
-                                    <th>Paid</th>
-                                    <th>Due Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% set has_dues = false %}
-                                {% for car in cars %}
-                                    {% set due = car.contract - car.received %}
-                                    {% if due > 0 %}
-                                        {% set has_dues = true %}
-                                        <tr>
-                                            <td>
-                                                <strong>{{ car.car_name }}</strong><br>
-                                                <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
-                                            </td>
-                                            <td>¥{{ "{:,.0f}".format(car.contract) }}</td>
-                                            <td class="text-success">¥{{ "{:,.0f}".format(car.received) }}</td>
-                                            <td class="fw-bold text-danger">¥{{ "{:,.0f}".format(due) }}</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if not has_dues %}
-                                    <tr><td colspan="4" class="text-center text-muted py-3">Awesome! No due amounts for any vehicle.</td></tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Monthly Paid History Modal -->
-    <div class="modal fade" id="monthlyPaidModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-calendar-alt me-2"></i> Monthly Paid Records ({{ selected_month }})</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small">Payments made specifically during the selected month ({{ selected_month }}).</p>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Car Name / Chassis</th>
-                                    <th>Payment Date</th>
-                                    <th>Amount Paid</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% set monthly_paid_found = false %}
-                                {% for car in cars %}
-                                    {% if car.payment_history %}
-                                        {% for pay in car.payment_history %}
-                                            {# এখানে ধরে নেওয়া হচ্ছে pay.date ফরম্যাট YYYY-MM বা মাসের নামের সাথে মিলে #}
-                                            {% if selected_month in pay.date %}
-                                                {% set monthly_paid_found = true %}
-                                                <tr>
-                                                    <td>
-                                                        <strong>{{ car.car_name }}</strong><br>
-                                                        <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
-                                                    </td>
-                                                    <td><span class="badge bg-secondary">{{ pay.date }}</span></td>
-                                                    <td class="fw-bold text-success">¥{{ "{:,.0f}".format(pay.amount) }}</td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if not monthly_paid_found %}
-                                    <tr><td colspan="3" class="text-center text-muted py-3">No payment records found for {{ selected_month }}.</td></tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Monthly Due Cars Modal -->
-    <div class="modal fade" id="monthlyDueModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i> Monthly Due / Pending Cars ({{ selected_month }})</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted small">Cars delivered or registered in {{ selected_month }} that still have remaining due amounts.</p>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Car Name / Chassis</th>
-                                    <th>Contract</th>
-                                    <th>Received</th>
-                                    <th>Due Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% set m_due_found = false %}
-                                {% for car in monthly_cars %}
-                                    {% set due = car.contract - car.received %}
-                                    {% if due > 0 %}
-                                        {% set m_due_found = true %}
-                                        <tr>
-                                            <td>
-                                                <strong>{{ car.car_name }}</strong><br>
-                                                <code class="text-dark bg-light px-1 rounded">{{ car.chassis }}</code>
-                                            </td>
-                                            <td>¥{{ "{:,.0f}".format(car.contract) }}</td>
-                                            <td class="text-success">¥{{ "{:,.0f}".format(car.received) }}</td>
-                                            <td class="fw-bold text-danger">¥{{ "{:,.0f}".format(due) }}</td>
-                                        </tr>
-                                    {% endif %}
-                                {% endfor %}
-                                {% if not m_due_found %}
-                                    <tr><td colspan="4" class="text-center text-muted py-3">Great! No due amounts for cars in {{ selected_month }}.</td></tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Monthly Delivered Cars Popup Modal -->
-    <div class="modal fade" id="monthlyDeliveredModal" tabindex="-1" aria-labelledby="monthlyDeliveredModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content" id="printableMonthlyModal">
-                <div class="modal-header bg-info text-dark">
-                    <h5 class="modal-title fw-bold" id="monthlyDeliveredModalLabel">
-                        <i class="fas fa-car-side me-2"></i> Monthly Delivery & Financial Report ({{ selected_month }})
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3 d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-0 text-secondary">Customer: {{ cust.company_name if cust else session.name }}</h6>
-                            <small class="text-muted">Report Month: {{ selected_month }}</small>
-                        </div>
-                        <div>
-                            <span class="badge bg-primary">Total Delivered: {{ monthly_cars|length }}</span>
-                        </div>
-                    </div>
-
-                    {% if monthly_cars %}
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped align-middle mb-0">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Car Name & Chassis</th>
-                                        <th>Receive Date</th>
-                                        <th>Delivery Date</th>
-                                        <th>Contract Value</th>
-                                        <th>Paid Value</th>
-                                        <th>Due Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for car in monthly_cars %}
-                                    <tr>
-                                        <td>{{ loop.index }}</td>
-                                        <td>
-                                            <strong>{{ car.car_name }}</strong><br>
-                                            <small class="text-muted font-monospace">{{ car.chassis }}</small>
-                                        </td>
-                                        <td><span class="text-primary">{{ car.get('receiving_date', 'N/A') }}</span></td>
-                                        <td><span class="text-success fw-bold">{{ car.get('delivery_date', 'N/A') }}</span></td>
-                                        <td>¥{{ "{:,.0f}".format(car.contract) }}</td>
-                                        <td class="text-success">¥{{ "{:,.0f}".format(car.received) }}</td>
-                                        <td class="text-danger">¥{{ "{:,.0f}".format(car.contract - car.received) }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                                <tfoot class="table-light fw-bold">
-                                    <tr>
-                                        <td colspan="4" class="text-end">Total for {{ selected_month }}:</td>
-                                        <td>¥{{ "{:,.0f}".format(monthly_contract) }}</td>
-                                        <td class="text-success">¥{{ "{:,.0f}".format(monthly_paid) }}</td>
-                                        <td class="text-danger">¥{{ "{:,.0f}".format(monthly_contract - monthly_paid) }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="text-center py-4 text-muted">
-                            <i class="fas fa-info-circle fa-2x mb-2 text-warning"></i>
-                            <p class="mb-0">No cars were delivered in this month ({{ selected_month }}).</p>
-                        </div>
-                    {% endif %}
-                </div>
-                <div class="modal-footer">
-                    {% if monthly_cars %}
-                    <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
-                        <i class="fas fa-print me-1"></i> Print / Save Report
-                    </button>
-                    {% endif %}
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <ul class="list-group">
+                        {% for car in monthly_cars %}
+                        {% set car_due = car.contract - car.received %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div><strong>{{ car.car_name }}</strong> ({{ car.chassis }})</div>
+                            <span class="fw-bold text-danger">¥{{ car_due }}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-center text-muted">No records found.</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="mt-3 text-end fw-bold fs-5">Total Monthly Due: ¥{{ monthly_due_calc if monthly_due_calc is defined else (monthly_contract - monthly_paid) }}</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
