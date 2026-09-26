@@ -67,20 +67,21 @@
 <body>
 
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 no-print">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fa-solid fa-car-side text-warning me-2"></i> Customer Portal: <span class="text-info">{{ session.name }}</span>
+    <nav class="navbar navbar-dark bg-dark py-3 no-print">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold" href="#">
+            <i class="fa-solid fa-car-side text-warning me-2"></i> Customer Portal: <span class="text-light small">{{ session.name }}</span>
+        </a>
+        
+        <!-- মোবাইল এবং ডেস্কটপ উভয় স্ক্রিনে লগআউট বাটনটি শো করার জন্য -->
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <span class="text-light small"><i class="fa-solid fa-building me-1"></i> {{ customer_company_name }}</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm px-3">
+                <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
             </a>
-            <div class="d-flex align-items-center gap-3">
-                <span class="text-light small"><i class="fa-solid fa-building me-1"></i> {{ cust.company_name if cust else session.name }}</span>
-                <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
-                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
-                </a>
-            </div>
         </div>
-    </nav>
-
+    </div>
+</nav>
     <!-- Main Container -->
     <div class="container-fluid px-4 py-4 no-print">
 

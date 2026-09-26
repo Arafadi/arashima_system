@@ -119,19 +119,21 @@
 <body>
 
     <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark py-3">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold fs-5" href="#">
-                <i class="fa-solid fa-user-gear text-warning me-2"></i> Staff Portal: <span class="text-info">{{ staff.name }}</span>
+    <nav class="navbar navbar-dark py-3">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand fw-bold fs-5" href="#">
+            <i class="fa-solid fa-user-gear text-warning me-2"></i> {{ staff.name }}
+        </a>
+        
+        <!-- মোবাইল এবং ডেস্কটপ উভয় স্ক্রিনে অপশনগুলো দৃশ্যমান রাখার জন্য -->
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <span class="badge bg-secondary px-3 py-2"><i class="fa-solid fa-user-shield me-1"></i> Role</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm px-3">
+                <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
             </a>
-            <div class="d-flex align-items-center gap-3">
-                <span class="badge bg-secondary px-3 py-2"><i class="fa-solid fa-shield-halved me-1"></i> Staff Role</span>
-                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm fw-bold px-3">
-                    <i class="fa-solid fa-right-from-bracket me-1"></i> Logout
-                </a>
-            </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Main Container -->
     <div class="container-fluid px-4 py-4">
