@@ -149,7 +149,17 @@ def admin_dashboard():
     if 'role' not in session or session['role'] != 'admin':
         return redirect(url_for('login'))
         
-    cars = database.get("cars", [])
+    all_cars = database.get("cars", [])
+    
+    # ইউজার ফিল্টার থেকে কোনো কোম্পানি সিলেক্ট করেছে কি না তা চেক করা
+    selected_client = request.args.get('client')
+    
+    if selected_client and selected_client != 'all' and selected_client != 'All Customers':
+        # শুধু সিলেক্ট করা কোম্পানির গাড়িগুলো ফিল্টার করা (এখানে car.get('client_company') ব্যবহার করা হয়েছে)
+        cars = [c for c in all_cars if c.get('client_company') == selected_client]
+    else:
+        cars = all_cars
+
     staff_list = database.get("staff", [])
     expenses = database.get("expenses", [])
     
@@ -157,15 +167,17 @@ def admin_dashboard():
     total_received = sum(float(c.get('received', 0) or 0) for c in cars)
     total_due = total_contract - total_received
     total_exp = sum(float(ex.get('amount', 0) or 0) for ex in expenses)
+    
+    return render_template('admin_dashboard.html',
+                         comp=database.get("company", {}),
+                         cars=cars,
+                         staff_list=staff_list,
+                         total_contract=total_contract,
+                         total_received=total_received,
+                         total_due=total_due,
+                         total_exp=total_exp,
+                         selected_client=selected_client)
 
-    return render_template('admin_dashboard.html', 
-                           comp=database.get("company", {}),
-                           cars=cars,
-                           staff_list=staff_list,
-                           total_contract=total_contract,
-                           total_received=total_received,
-                           total_due=total_due,
-                           total_exp=total_exp)
 
 
 @app.route('/admin/receive-payment-dashboard', methods=['POST'])

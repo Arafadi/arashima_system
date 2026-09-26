@@ -212,20 +212,29 @@
                 
                 <!-- Customer Filter Dropdown -->
                 <div class="d-flex align-items-center gap-2">
-                    <label class="small fw-bold text-muted mb-0">Filter Client:</label>
-                    <select id="clientFilter" class="form-select form-select-sm" onchange="filterCarsByClient()">
-                        <option value="all">-- All Customers --</option>
-                        {% set unique_clients = [] %}
-                        {% for car in cars %}
-                            {% if car.client_company not in unique_clients %}
-                                {% set _ = unique_clients.append(car.client_company) %}
-                                <option value="{{ car.client_company }}">{{ car.client_company }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            
+    <label class="small fw-bold text-muted mb-0">Filter Client:</label>
+    <select id="clientFilter" class="form-select form-select-sm" onchange="filterCarsByClient()">
+        <option value="all" {% if not selected_client or selected_client == 'all' %}selected{% endif %}>-- All Customers --</option>
+        {% set unique_clients = [] %}
+        {% for car in cars %}
+            {% if car.client_company and car.client_company not in unique_clients %}
+                {% set _ = unique_clients.append(car.client_company) %}
+                <option value="{{ car.client_company }}" {% if selected_client == car.client_company %}selected{% endif %}>
+                    {{ car.client_company }}
+                </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</div>
+
+<!-- জাভাস্ক্রিপ্ট কোড যা সিলেক্ট করার সাথে সাথে পেজটি ফিল্টার সহ রিডাইরেক্ট করবে -->
+<script>
+    function filterCarsByClient() {
+        var selectedValue = document.getElementById("clientFilter").value;
+        window.location.href = "/admin/dashboard?client=" + encodeURIComponent(selectedValue);
+    }
+</script>
+          
             <div class="card-body p-0">
                 {% if cars %}
                 <div class="table-responsive">
