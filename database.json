@@ -23,10 +23,10 @@
             "address": "Chiba ken, Inzai-Shi, ",
             "username": "AutoN",
             "password": "2707",
-            "total_cars": 26,
-            "total_contract": 2430000.0,
-            "total_received": 0.0,
-            "total_due": 2430000.0
+            "total_cars": 35,
+            "total_contract": 2685000.0,
+            "total_received": 1505000.0,
+            "total_due": 1180000.0
         },
         {
             "id": 2,
@@ -50,9 +50,9 @@
             "username": "Prince",
             "password": "7069",
             "total_cars": 5,
-            "total_contract": 230000.0,
-            "total_received": 0.0,
-            "total_due": 230000.0
+            "total_contract": 240000.0,
+            "total_received": 140000.0,
+            "total_due": 100000.0
         },
         {
             "id": 4,
@@ -66,6 +66,110 @@
             "total_contract": 510000.0,
             "total_received": 350000.0,
             "total_due": 160000.0
+        },
+        {
+            "id": 5,
+            "company_name": "SHEAK TRADING",
+            "owner_name": "LITON SHEAK",
+            "mobile": "09040684042",
+            "address": "CHIBA KEN INZAI SHI",
+            "username": "SheakT",
+            "password": "4042",
+            "total_cars": 5,
+            "total_contract": 165000.0,
+            "total_received": 360000.0,
+            "total_due": -195000.0
+        },
+        {
+            "id": 6,
+            "company_name": "WAKER TRADING",
+            "owner_name": "Waker San",
+            "mobile": "08084259413",
+            "address": "CHIBA KEN KASHIWA SHI",
+            "username": "WakerT",
+            "password": "9413",
+            "total_cars": 7,
+            "total_contract": 488000.0,
+            "total_received": 130000.0,
+            "total_due": 358000.0
+        },
+        {
+            "id": 7,
+            "company_name": "HA INTERNATIONAL",
+            "owner_name": "ABDUL HANNAN",
+            "mobile": "08055479010",
+            "address": "CHIBA KEN SHIROI SHI",
+            "username": "HaT",
+            "password": "9010",
+            "total_cars": 3,
+            "total_contract": 350000.0,
+            "total_received": 100000.0,
+            "total_due": 250000.0
+        },
+        {
+            "id": 8,
+            "company_name": "YURINA TRADING",
+            "owner_name": "FAHIM BUTTI",
+            "mobile": "09079005067",
+            "address": "CHIBA KEN, MATSUDO SHI",
+            "username": "YurinaT",
+            "password": "5067",
+            "total_cars": 1,
+            "total_contract": 247000.0,
+            "total_received": 0.0,
+            "total_due": 247000.0
+        },
+        {
+            "id": 9,
+            "company_name": "KBAEER INTERNATIONAL",
+            "owner_name": "MOBASHIR AHAMED",
+            "mobile": "08032067129",
+            "address": "CHIBA KEN MATSUDO SHI",
+            "username": "KbaeerI",
+            "password": "7129",
+            "total_cars": 1,
+            "total_contract": 618000.0,
+            "total_received": 0.0,
+            "total_due": 618000.0
+        },
+        {
+            "id": 10,
+            "company_name": "SAKI CO.,LTD",
+            "owner_name": "SAKIL AHAMED",
+            "mobile": "09060073322",
+            "address": "CHIBA KEN INZAI SHI",
+            "username": "Saki",
+            "password": "3322",
+            "total_cars": 6,
+            "total_contract": 500000.0,
+            "total_received": 0.0,
+            "total_due": 500000.0
+        },
+        {
+            "id": 11,
+            "company_name": "IRANGA CO.,LTD",
+            "owner_name": "IRANGA ",
+            "mobile": "07014325050",
+            "address": "CHIBA KEN INZAI SHI",
+            "username": "IRAN",
+            "password": "5050",
+            "total_cars": 1,
+            "total_contract": 140000.0,
+            "total_received": 0.0,
+            "total_due": 140000.0
+        },
+        {
+            "id": 12,
+            "company_name": "MONJU CO.,LTD",
+            "owner_name": "MONJU SAN",
+            "mobile": "08032655070",
+            "address": "CHIBA KEN SHIROI SHI",
+            "username": "Monju",
+            "password": "5070",
+            "total_cars": 0,
+            "total_contract": 0,
+            "total_received": 0,
+            "total_due": 0
         }
     ],
     "staff": [
@@ -79,7 +183,13 @@
             "base_salary": 160000.0,
             "advance_balance": 0.0,
             "leave_history": [],
-            "advance_history": [],
+            "advance_history": [
+                {
+                    "id": "1791197468.908618",
+                    "date": "2026-10-03",
+                    "amount": 5000.0
+                }
+            ],
             "overtime_history": [],
             "holiday_work_history": []
         },
@@ -93,7 +203,13 @@
             "base_salary": 150000.0,
             "advance_balance": 0.0,
             "leave_history": [],
-            "advance_history": [],
+            "advance_history": [
+                {
+                    "id": "1790764389.389154",
+                    "date": "2026-09-30",
+                    "amount": 10000.0
+                }
+            ],
             "overtime_history": [],
             "holiday_work_history": []
         },
@@ -115,7 +231,13 @@
                 }
             ],
             "overtime_history": [],
-            "holiday_work_history": []
+            "holiday_work_history": [
+                {
+                    "id": "1791197524.049299",
+                    "date": "2026-10-04",
+                    "note": "sunday"
+                }
+            ]
         },
         {
             "id": 4,
@@ -140,8 +262,8 @@
             "color_name": "White",
             "color_code": "W13",
             "client_company": "Auto Nest Inzai",
-            "contract": 40000.0,
-            "received": 40000.0,
+            "contract": 20000.0,
+            "received": 20000.0,
             "details": "Dent Paint ",
             "receiving_date": "2026-09-01",
             "before_images": [],
@@ -152,7 +274,7 @@
                 {
                     "id": "1790339245.635713",
                     "client": "Auto Nest Inzai",
-                    "amount": 40000.0,
+                    "amount": 20000.0,
                     "date": "2026-09-25"
                 }
             ],
@@ -165,8 +287,8 @@
             "color_name": "White",
             "color_code": "070",
             "client_company": "Auto Nest Inzai",
-            "contract": 70000.0,
-            "received": 70000.0,
+            "contract": 40000.0,
+            "received": 40000.0,
             "details": "Left Right Side Dent Paint",
             "receiving_date": "2026-09-01",
             "before_images": [],
@@ -177,7 +299,7 @@
                 {
                     "id": "1790339273.573",
                     "client": "Auto Nest Inzai",
-                    "amount": 70000.0,
+                    "amount": 40000.0,
                     "date": "2026-09-25"
                 }
             ],
@@ -190,8 +312,8 @@
             "color_name": "Pink",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 120000.0,
-            "received": 120000.0,
+            "contract": 100000.0,
+            "received": 100000.0,
             "details": "Dent Left Right Side \r\nAll Body Color",
             "receiving_date": "2026-09-01",
             "before_images": [],
@@ -202,7 +324,7 @@
                 {
                     "id": "1790339301.880941",
                     "client": "Auto Nest Inzai",
-                    "amount": 120000.0,
+                    "amount": 100000.0,
                     "date": "2026-09-25"
                 }
             ],
@@ -221,8 +343,9 @@
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "Waiting",
-            "assigned_staff": "Mizanur rahman"
+            "status": "In Progress",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": ""
         },
         {
             "id": 5,
@@ -231,8 +354,8 @@
             "color_name": "White",
             "color_code": "070",
             "client_company": "Auto Nest Inzai",
-            "contract": 120000.0,
-            "received": 70000.0,
+            "contract": 100000.0,
+            "received": 100000.0,
             "details": "with out roof all side color, Dent paint",
             "receiving_date": "2026-09-01",
             "before_images": [],
@@ -241,10 +364,10 @@
             "assigned_staff": "Mizanur rahman",
             "payment_history": [
                 {
-                    "id": "1790339565.566881",
+                    "id": "1791194891.65979",
                     "client": "Auto Nest Inzai",
-                    "amount": 70000.0,
-                    "date": "2026-09-25"
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
                 }
             ],
             "delivery_date": "2026-09-24"
@@ -256,15 +379,23 @@
             "color_name": "Gold ",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 120000.0,
-            "received": 0.0,
+            "contract": 80000.0,
+            "received": 80000.0,
             "details": "Dent Paint\r\nall paint ",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791194920.166086",
+                    "client": "Auto Nest Inzai",
+                    "amount": 80000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 7,
@@ -273,15 +404,23 @@
             "color_name": "White",
             "color_code": "070",
             "client_company": "Auto Nest Inzai",
-            "contract": 80000.0,
-            "received": 0.0,
+            "contract": 60000.0,
+            "received": 60000.0,
             "details": "all side dent paint ",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791194968.432232",
+                    "client": "Auto Nest Inzai",
+                    "amount": 60000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 8,
@@ -290,15 +429,23 @@
             "color_name": "Merun",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 130000.0,
-            "received": 0.0,
+            "contract": 100000.0,
+            "received": 100000.0,
             "details": "Dent paint \r\nFull Color",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-25"
+            "delivery_date": "2026-09-25",
+            "payment_history": [
+                {
+                    "id": "1791194995.810984",
+                    "client": "Auto Nest Inzai",
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 9,
@@ -307,15 +454,23 @@
             "color_name": "Silver",
             "color_code": "1f7",
             "client_company": "Auto Nest Inzai",
-            "contract": 120000.0,
-            "received": 0.0,
+            "contract": 100000.0,
+            "received": 100000.0,
             "details": "Dent Paint\r\nFull Color",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791195014.890854",
+                    "client": "Auto Nest Inzai",
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 10,
@@ -324,15 +479,23 @@
             "color_name": "White",
             "color_code": "070",
             "client_company": "Auto Nest Inzai",
-            "contract": 80000.0,
-            "received": 0.0,
+            "contract": 70000.0,
+            "received": 70000.0,
             "details": "Back left right dent paint",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791195032.619053",
+                    "client": "Auto Nest Inzai",
+                    "amount": 70000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 11,
@@ -342,14 +505,22 @@
             "color_code": "202",
             "client_company": "Auto Nest Inzai",
             "contract": 100000.0,
-            "received": 0.0,
+            "received": 100000.0,
             "details": "all color without roof",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791195062.063595",
+                    "client": "Auto Nest Inzai",
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 12,
@@ -374,15 +545,23 @@
             "color_name": "GOLDEN",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 120000.0,
-            "received": 0.0,
+            "contract": 100000.0,
+            "received": 100000.0,
             "details": "WITH OUT ROOF \r\nFULL COLOR \r\nDENT RIGHT SIDE BACK SIDE",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791195105.160403",
+                    "client": "Auto Nest Inzai",
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 14,
@@ -391,15 +570,23 @@
             "color_name": "GREAY",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 110000.0,
-            "received": 0.0,
+            "contract": 100000.0,
+            "received": 100000.0,
             "details": "ALL COLOR \r\nDENT ",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-25"
+            "delivery_date": "2026-09-25",
+            "payment_history": [
+                {
+                    "id": "1791195136.401672",
+                    "client": "Auto Nest Inzai",
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 15,
@@ -408,15 +595,23 @@
             "color_name": "White",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 100000.0,
-            "received": 0.0,
+            "contract": 80000.0,
+            "received": 80000.0,
             "details": "DENT PAINT FRONT BACK LEFT SIDE",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Delivered",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791195170.98605",
+                    "client": "Auto Nest Inzai",
+                    "amount": 80000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 16,
@@ -425,15 +620,23 @@
             "color_name": "White",
             "color_code": "070",
             "client_company": "Auto Nest Inzai",
-            "contract": 50000.0,
-            "received": 0.0,
+            "contract": 35000.0,
+            "received": 35000.0,
             "details": "ROOF AND SIDE DENT PAINT",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Completed",
             "assigned_staff": "Mizanur rahman",
-            "delivery_date": "2026-09-24"
+            "delivery_date": "2026-09-24",
+            "payment_history": [
+                {
+                    "id": "1791195214.471975",
+                    "client": "Auto Nest Inzai",
+                    "amount": 35000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 17,
@@ -480,8 +683,9 @@
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "Waiting",
-            "assigned_staff": "Mizanur rahman"
+            "status": "In Progress",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": ""
         },
         {
             "id": 20,
@@ -490,14 +694,23 @@
             "color_name": "BLACK",
             "color_code": "202",
             "client_company": "Auto Nest Inzai",
-            "contract": 80000.0,
-            "received": 0.0,
+            "contract": 70000.0,
+            "received": 70000.0,
             "details": "BONET\r\nLEFT SIDE FULL\r\nBACK BUMPER",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "Waiting",
-            "assigned_staff": "Mizanur rahman"
+            "status": "Delivered",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": "2026-09-30",
+            "payment_history": [
+                {
+                    "id": "1791195253.232863",
+                    "client": "Auto Nest Inzai",
+                    "amount": 70000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 21,
@@ -522,14 +735,15 @@
             "color_name": "SILVER",
             "color_code": "1F7",
             "client_company": "Auto Nest Inzai",
-            "contract": 80000.0,
+            "contract": 100000.0,
             "received": 0.0,
             "details": "BACK BUMPER , DOOR\r\nLEFT RIGHT DOOR \r\nROOF\r\nSUPOILER",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "Waiting",
-            "assigned_staff": "Mizanur rahman"
+            "status": "In Progress",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": ""
         },
         {
             "id": 23,
@@ -539,13 +753,22 @@
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
             "contract": 80000.0,
-            "received": 0.0,
+            "received": 80000.0,
             "details": "FRONT BUMPER, FRNDER, LEFT RIGHT MIRA\r\nBACK BUMPER\r\nFRONT DOOR, FENDER LEFT\r\nDENT PAINT",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "Completed",
-            "assigned_staff": "Mizanur rahman"
+            "status": "Delivered",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": "2026-09-30",
+            "payment_history": [
+                {
+                    "id": "1791195283.544031",
+                    "client": "Auto Nest Inzai",
+                    "amount": 80000.0,
+                    "date": "2026-09-30"
+                }
+            ]
         },
         {
             "id": 24,
@@ -586,14 +809,15 @@
             "color_name": "BLUE",
             "color_code": "000",
             "client_company": "Auto Nest Inzai",
-            "contract": 90000.0,
+            "contract": 80000.0,
             "received": 0.0,
             "details": "LEFT RIGHT ALL COLOR\r\nBONET , BUMPEER",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
             "status": "Waiting",
-            "assigned_staff": "Mizanur rahman"
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": ""
         },
         {
             "id": 27,
@@ -674,7 +898,8 @@
                     "amount": 70000.0,
                     "date": "2026-09-25"
                 }
-            ]
+            ],
+            "delivery_date": "2026-09-30"
         },
         {
             "id": 31,
@@ -689,7 +914,7 @@
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "In Progress",
+            "status": "Completed",
             "assigned_staff": "Lorlornyo slyvaster",
             "delivery_date": ""
         },
@@ -700,13 +925,13 @@
             "color_name": "RED",
             "color_code": "000",
             "client_company": "PRINCE SAN",
-            "contract": 10000.0,
+            "contract": 20000.0,
             "received": 0.0,
             "details": "NAVY SETTING",
             "receiving_date": "2026-09-01",
             "before_images": [],
             "after_images": [],
-            "status": "In Progress",
+            "status": "Completed",
             "assigned_staff": "Hemel Deawan",
             "delivery_date": ""
         },
@@ -793,6 +1018,745 @@
                 }
             ],
             "delivery_date": ""
+        },
+        {
+            "id": 37,
+            "car_name": "Noah",
+            "chassis": "Zrr80",
+            "color_name": "Wine",
+            "color_code": "000",
+            "client_company": "SHEAK TRADING",
+            "contract": 15000.0,
+            "received": 130000.0,
+            "details": "Front Bumper All Color",
+            "receiving_date": "2026-09-28",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": "2026-09-30",
+            "payment_history": [
+                {
+                    "id": "1790765100.150632",
+                    "client": "SHEAK TRADING",
+                    "amount": 130000.0,
+                    "date": "2026-09-01"
+                }
+            ]
+        },
+        {
+            "id": 38,
+            "car_name": "Prius",
+            "chassis": "Zvw30",
+            "color_name": "Blue",
+            "color_code": "000",
+            "client_company": "SHEAK TRADING",
+            "contract": 35000.0,
+            "received": 30000.0,
+            "details": "Roof, back Bumper",
+            "receiving_date": "2026-09-28",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": "2026-09-30",
+            "payment_history": [
+                {
+                    "id": "1790765060.206828",
+                    "client": "SHEAK TRADING",
+                    "amount": 30000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 39,
+            "car_name": "Subaru G4",
+            "chassis": "0000",
+            "color_name": "Deep Blue",
+            "color_code": "000",
+            "client_company": "SHEAK TRADING",
+            "contract": 40000.0,
+            "received": 200000.0,
+            "details": "Left Side Front Door Change, Left back door Bunking paint",
+            "receiving_date": "2026-09-25",
+            "before_images": [],
+            "after_images": [],
+            "status": "In Progress",
+            "assigned_staff": "Hemel Deawan",
+            "delivery_date": "",
+            "payment_history": [
+                {
+                    "id": "1790765133.227139",
+                    "client": "SHEAK TRADING",
+                    "amount": 200000.0,
+                    "date": "2026-09-18"
+                }
+            ]
+        },
+        {
+            "id": 40,
+            "car_name": "Porte/ Sienta",
+            "chassis": "000",
+            "color_name": "Lite Blue",
+            "color_code": "000",
+            "client_company": "SHEAK TRADING",
+            "contract": 25000.0,
+            "received": 0.0,
+            "details": "Left side back bumper, Left side Front Bumper, Fender",
+            "receiving_date": "2026-09-30",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Lorlornyo slyvaster"
+        },
+        {
+            "id": 41,
+            "car_name": "Aqua",
+            "chassis": "Nhp10",
+            "color_name": "Red",
+            "color_code": "3p0",
+            "client_company": "WAKER TRADING",
+            "contract": 55000.0,
+            "received": 0.0,
+            "details": "all Body Color inside",
+            "receiving_date": "2026-09-25",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": "2026-09-30"
+        },
+        {
+            "id": 42,
+            "car_name": "Mercedence Benzs",
+            "chassis": "0000",
+            "color_name": "Black",
+            "color_code": "209",
+            "client_company": "WAKER TRADING",
+            "contract": 60000.0,
+            "received": 0.0,
+            "details": "Left Side 2 Door dENT Paint",
+            "receiving_date": "2026-09-25",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": "2026-09-30"
+        },
+        {
+            "id": 43,
+            "car_name": "Passo",
+            "chassis": "000",
+            "color_name": "Green",
+            "color_code": "G58",
+            "client_company": "WAKER TRADING",
+            "contract": 50000.0,
+            "received": 0.0,
+            "details": "Right Side All, Bonnet, Left Fender Color",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Lorlornyo slyvaster"
+        },
+        {
+            "id": 44,
+            "car_name": "BMW",
+            "chassis": "0000",
+            "color_name": "White",
+            "color_code": "070",
+            "client_company": "WAKER TRADING",
+            "contract": 50000.0,
+            "received": 30000.0,
+            "details": "Sasupention Work",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "In Progress",
+            "assigned_staff": "Hemel Deawan",
+            "payment_history": [
+                {
+                    "id": "1790764583.119709",
+                    "client": "WAKER TRADING",
+                    "amount": 30000.0,
+                    "date": "2026-09-30"
+                }
+            ],
+            "delivery_date": ""
+        },
+        {
+            "id": 45,
+            "car_name": "Move Canvas",
+            "chassis": "La650S",
+            "color_name": "Pink",
+            "color_code": "000",
+            "client_company": "WAKER TRADING",
+            "contract": 80000.0,
+            "received": 0.0,
+            "details": "Dent Paint , Bunking",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Hemel Deawan"
+        },
+        {
+            "id": 46,
+            "car_name": "Hijet ",
+            "chassis": "0000",
+            "color_name": "Silver",
+            "color_code": "000",
+            "client_company": "HA INTERNATIONAL",
+            "contract": 100000.0,
+            "received": 0.0,
+            "details": "Right Side Bunking, back door",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Lorlornyo slyvaster",
+            "delivery_date": ""
+        },
+        {
+            "id": 47,
+            "car_name": "Sienta ",
+            "chassis": "MXPJ10",
+            "color_name": "Pearl",
+            "color_code": "070",
+            "client_company": "HA INTERNATIONAL",
+            "contract": 100000.0,
+            "received": 0.0,
+            "details": "Right Side Bunking",
+            "receiving_date": "2026-09-18",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": ""
+        },
+        {
+            "id": 48,
+            "car_name": "Before Total Due",
+            "chassis": "0000",
+            "color_name": "000",
+            "color_code": "000",
+            "client_company": "WAKER TRADING",
+            "contract": 123000.0,
+            "received": 100000.0,
+            "details": "Before all calculation Due",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Hemel Deawan",
+            "payment_history": [
+                {
+                    "id": "1790764948.739866",
+                    "client": "WAKER TRADING",
+                    "amount": 100000.0,
+                    "date": "2026-09-18"
+                }
+            ]
+        },
+        {
+            "id": 49,
+            "car_name": "Rooks ",
+            "chassis": "0000",
+            "color_name": "White",
+            "color_code": "000",
+            "client_company": "WAKER TRADING",
+            "contract": 80000.0,
+            "received": 0.0,
+            "details": "Car Buy For Student",
+            "receiving_date": "2026-09-11",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Hemel Deawan",
+            "delivery_date": "2026-09-30"
+        },
+        {
+            "id": 50,
+            "car_name": "Before ALL Car ",
+            "chassis": "000",
+            "color_name": "000",
+            "color_code": "000",
+            "client_company": "YURINA TRADING",
+            "contract": 247000.0,
+            "received": 0.0,
+            "details": "all car calculate due ",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "In Progress",
+            "assigned_staff": "Hemel Deawan",
+            "delivery_date": ""
+        },
+        {
+            "id": 51,
+            "car_name": "Before all Car DUe",
+            "chassis": "000",
+            "color_name": "000",
+            "color_code": "000",
+            "client_company": "KBAEER INTERNATIONAL",
+            "contract": 618000.0,
+            "received": 0.0,
+            "details": "CAlculate alll car due Before",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "In Progress",
+            "assigned_staff": "Hemel Deawan"
+        },
+        {
+            "id": 52,
+            "car_name": "Mazda CX-5",
+            "chassis": "00000",
+            "color_name": "Greay",
+            "color_code": "000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 150000.0,
+            "received": 0.0,
+            "details": "All Color",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "In Progress",
+            "assigned_staff": "Mizanur rahman",
+            "delivery_date": ""
+        },
+        {
+            "id": 53,
+            "car_name": "Suzuki Huslar",
+            "chassis": "MR41S",
+            "color_name": "YELLOW",
+            "color_code": "0000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 30000.0,
+            "received": 0.0,
+            "details": "BONET COLOR DENT PAINT",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Antu Kumar",
+            "delivery_date": ""
+        },
+        {
+            "id": 54,
+            "car_name": "SUZUKI HUSLAR",
+            "chassis": "MR41S",
+            "color_name": "BLUE",
+            "color_code": "0000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 80000.0,
+            "received": 0.0,
+            "details": "ALL SIDE COLOR WITHOUT ROOF",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Antu Kumar"
+        },
+        {
+            "id": 55,
+            "car_name": "SUZUKI HUSLAR ",
+            "chassis": "MR41S",
+            "color_name": "RED",
+            "color_code": "000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 40000.0,
+            "received": 40000.0,
+            "details": "COLOR",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Antu Kumar",
+            "payment_history": [
+                {
+                    "id": "1791196186.484005",
+                    "client": "Auto Nest Inzai",
+                    "amount": 40000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 56,
+            "car_name": "DAYS SILVER",
+            "chassis": "B34W",
+            "color_name": "SILVER",
+            "color_code": "0000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 20000.0,
+            "received": 20000.0,
+            "details": "COLOR",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Antu Kumar",
+            "payment_history": [
+                {
+                    "id": "1791196210.695615",
+                    "client": "Auto Nest Inzai",
+                    "amount": 20000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 57,
+            "car_name": "NISSAN SERENA",
+            "chassis": "0000",
+            "color_name": "black",
+            "color_code": "000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 50000.0,
+            "received": 50000.0,
+            "details": "color",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "",
+            "payment_history": [
+                {
+                    "id": "1791196233.426688",
+                    "client": "Auto Nest Inzai",
+                    "amount": 50000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 58,
+            "car_name": "N box plus",
+            "chassis": "jf1",
+            "color_name": "silver",
+            "color_code": "0000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 50000.0,
+            "received": 50000.0,
+            "details": "color",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Antu Kumar",
+            "payment_history": [
+                {
+                    "id": "1791196253.022629",
+                    "client": "Auto Nest Inzai",
+                    "amount": 50000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 59,
+            "car_name": "TOYOTA PRIUS",
+            "chassis": "ZVW30",
+            "color_name": "SILVER",
+            "color_code": "000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 80000.0,
+            "received": 80000.0,
+            "details": "COLOR",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Antu Kumar",
+            "payment_history": [
+                {
+                    "id": "1791196273.689115",
+                    "client": "Auto Nest Inzai",
+                    "amount": 80000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 60,
+            "car_name": "NISSAN DAYS ",
+            "chassis": "B34A",
+            "color_name": "ORANGE",
+            "color_code": "000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 30000.0,
+            "received": 30000.0,
+            "details": "COLOR",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Antu Kumar",
+            "payment_history": [
+                {
+                    "id": "1791196293.885007",
+                    "client": "Auto Nest Inzai",
+                    "amount": 30000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 61,
+            "car_name": "TOYOTA PRIUS ",
+            "chassis": "ZVW30",
+            "color_name": "WINE",
+            "color_code": "000",
+            "client_company": "SHEAK TRADING",
+            "contract": 50000.0,
+            "received": 0.0,
+            "details": "ROOF, BONET , LEFT SIDE",
+            "receiving_date": "2026-10-03",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Antu Kumar"
+        },
+        {
+            "id": 62,
+            "car_name": "SUZUKI HUSLAR",
+            "chassis": "MR92S",
+            "color_name": "MIZU ",
+            "color_code": "000",
+            "client_company": "SAKI CO.,LTD",
+            "contract": 40000.0,
+            "received": 0.0,
+            "details": "BACK DOOR DENT PAINT",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "In Progress",
+            "assigned_staff": "Lorlornyo slyvaster"
+        },
+        {
+            "id": 63,
+            "car_name": "HONDA N ONE",
+            "chassis": "JF1",
+            "color_name": "RED",
+            "color_code": "000",
+            "client_company": "IRANGA CO.,LTD",
+            "contract": 140000.0,
+            "received": 0.0,
+            "details": "ALL COLOR ROOF 2 TON",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Lorlornyo slyvaster"
+        },
+        {
+            "id": 64,
+            "car_name": "DAIHATSU MOVE CANVAS",
+            "chassis": "LA650S",
+            "color_name": "GREAY",
+            "color_code": "0000",
+            "client_company": "HA INTERNATIONAL",
+            "contract": 150000.0,
+            "received": 100000.0,
+            "details": "LEFT SIDE DENT PAINT",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Lorlornyo slyvaster",
+            "payment_history": [
+                {
+                    "id": "1791252980.555133",
+                    "client": "HA INTERNATIONAL",
+                    "amount": 100000.0,
+                    "date": "2026-09-30"
+                }
+            ]
+        },
+        {
+            "id": 65,
+            "car_name": "SUZUKI EVERY",
+            "chassis": "00000",
+            "color_name": "WHITE",
+            "color_code": "070",
+            "client_company": "SAKI CO.,LTD",
+            "contract": 80000.0,
+            "received": 0.0,
+            "details": "FRONT SIDE ALL FITTING",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Lorlornyo slyvaster"
+        },
+        {
+            "id": 66,
+            "car_name": "SUZUKI SPECIA ",
+            "chassis": "MK53S",
+            "color_name": "BADGE",
+            "color_code": "000",
+            "client_company": "SAKI CO.,LTD",
+            "contract": 50000.0,
+            "received": 0.0,
+            "details": "FENDER BUMPER, BONET, FITTING",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Mizanur rahman"
+        },
+        {
+            "id": 67,
+            "car_name": "HONDA N-BOX",
+            "chassis": "JF5",
+            "color_name": "BADGE",
+            "color_code": "000",
+            "client_company": "SAKI CO.,LTD",
+            "contract": 140000.0,
+            "received": 0.0,
+            "details": "DENT PAINT, BACK SIDE",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Lorlornyo slyvaster"
+        },
+        {
+            "id": 68,
+            "car_name": "SUZUKI SPECIA ",
+            "chassis": "MK94S",
+            "color_name": "BADGE",
+            "color_code": "000",
+            "client_company": "SAKI CO.,LTD",
+            "contract": 40000.0,
+            "received": 0.0,
+            "details": "FRONT COLOR , DENT , PAIT",
+            "receiving_date": "2026-09-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Delivered",
+            "assigned_staff": "Mizanur rahman"
+        },
+        {
+            "id": 69,
+            "car_name": "TOYOTA SIENTA ",
+            "chassis": "MXPJ10",
+            "color_name": "BADGE",
+            "color_code": "0000",
+            "client_company": "SAKI CO.,LTD",
+            "contract": 150000.0,
+            "received": 0.0,
+            "details": "ALL COLOR SETTING",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Antu Kumar"
+        },
+        {
+            "id": 70,
+            "car_name": "daihatsu Tanto",
+            "chassis": "la650s",
+            "color_name": "white",
+            "color_code": "070",
+            "client_company": "MONJU CO.,LTD",
+            "contract": 150000.0,
+            "received": 100000.0,
+            "details": "left side, dip change",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Lorlornyo slyvaster",
+            "payment_history": [
+                {
+                    "id": "1791256934.507511",
+                    "client": "MONJU CO.,LTD",
+                    "amount": 100000.0,
+                    "date": "2026-10-01"
+                }
+            ]
+        },
+        {
+            "id": 71,
+            "car_name": "toyota noah customer",
+            "chassis": "zrr70",
+            "color_name": "silver",
+            "color_code": "1f7",
+            "client_company": "Auto Nest Inzai",
+            "contract": 200000.0,
+            "received": 0.0,
+            "details": "back side glass",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Mizanur rahman"
+        },
+        {
+            "id": 72,
+            "car_name": "Honda Freed ",
+            "chassis": "0000",
+            "color_name": "GREAY",
+            "color_code": "000",
+            "client_company": "Auto Nest Inzai",
+            "contract": 150000.0,
+            "received": 0.0,
+            "details": "all color dent paint",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Completed",
+            "assigned_staff": "Mizanur rahman"
+        },
+        {
+            "id": 73,
+            "car_name": "rooks/ mini ",
+            "chassis": "0000",
+            "color_name": "badge",
+            "color_code": "00",
+            "client_company": "WAKER TRADING",
+            "contract": 140000.0,
+            "received": 0.0,
+            "details": "dent paint",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Hemel Deawan"
+        },
+        {
+            "id": 74,
+            "car_name": "BMW/ unknown",
+            "chassis": "00000",
+            "color_name": "blue",
+            "color_code": "0000",
+            "client_company": "WAKER TRADING",
+            "contract": 0.0,
+            "received": 0.0,
+            "details": "unknown",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Hemel Deawan"
+        },
+        {
+            "id": 75,
+            "car_name": "nissan note",
+            "chassis": "0000",
+            "color_name": "silver",
+            "color_code": "1f7",
+            "client_company": "WAKER TRADING",
+            "contract": 140000.0,
+            "received": 0.0,
+            "details": "dent paint",
+            "receiving_date": "2026-10-01",
+            "before_images": [],
+            "after_images": [],
+            "status": "Waiting",
+            "assigned_staff": "Hemel Deawan"
         }
     ],
     "expenses": [
